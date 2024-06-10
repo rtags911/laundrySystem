@@ -1,0 +1,98 @@
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    formData.append("action", "login"); // Set action to 'login'
+
+    fetch("http://localhost/laundrySystem/api/file/", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const expirationTime = new Date(Date.now() + 20 * 60 * 1000); // 20 minutes from now
+          document.cookie = `username=${
+            data.username
+          }; expires=${expirationTime.toUTCString()}; path=/`;
+          document.cookie = `id=${
+            data.id
+          }; expires=${expirationTime.toUTCString()}; path=/`;
+          document.cookie = `level=${
+            data.level
+          }; expires=${expirationTime.toUTCString()}; path=/`;
+          var level = getCookie("level");
+
+          Swal.fire({
+            title: "Success!",
+            text: data.message,
+            icon: "success",
+            confirmButtonText: "Ok",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              if (level != 2) {
+                window.location.href =
+                  "http://localhost/laundrySystem/admin/index.html";
+              } else {
+                window.location.reload();
+                $("#authModal").modal("hide");
+              }
+            }
+          });
+        } else {
+          Swal.fire({
+            title: "Error!",
+            text: data.message,
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  });
+
+  document
+    .getElementById("registerForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      formData.append("action", "register"); // Set action to 'register'
+
+      fetch("http://localhost/laundrySystem/api/file/", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            Swal.fire({
+              title: "Success!",
+              text: data.message,
+              icon: "success",
+              confirmButtonText: "Ok",
+            });
+          } else {
+            Swal.fire({
+              title: "Error!",
+              text: data.message,
+              icon: "error",
+              confirmButtonText: "Ok",
+            });
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    });
+
+  //   $("#authModal").modal("hide");
+});
+
+function getCookie(name) {
+  let cookieArr = document.cookie.split(";");
+  for (let i = 0; i < cookieArr.length; i++) {
+    let cookiePair = cookieArr[i].split("=");
+    if (name == cookiePair[0].trim()) {
+      return decodeURIComponent(cookiePair[1]);
+    }
+  }
+  return null;
+}

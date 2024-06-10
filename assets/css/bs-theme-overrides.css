@@ -1,0 +1,94 @@
+:root,
+[data-bs-theme="light"] {
+  --bs-primary: #4e65df;
+  --bs-primary-rgb: 78, 101, 223;
+  --bs-primary-text-emphasis: #1f2859;
+  --bs-primary-bg-subtle: #dce0f9;
+  --bs-primary-border-subtle: #b8c1f2;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #4e65df;
+  --bs-btn-border-color: #4e65df;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #4256be;
+  --bs-btn-hover-border-color: #3e51b2;
+  --bs-btn-focus-shadow-rgb: 228, 232, 250;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #3e51b2;
+  --bs-btn-active-border-color: #3b4ca7;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #4e65df;
+  --bs-btn-disabled-border-color: #4e65df;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #4e65df;
+  --bs-btn-border-color: #4e65df;
+  --bs-btn-focus-shadow-rgb: 78, 101, 223;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #4e65df;
+  --bs-btn-hover-border-color: #4e65df;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #4e65df;
+  --bs-btn-active-border-color: #4e65df;
+  --bs-btn-disabled-color: #4e65df;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #4e65df;
+}
+
+.status-dropdown {
+  border-radius: 8px;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  background-color: #f8f9fa;
+  font-size: 14px;
+  color: #495057;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.status-dropdown:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.status-dropdown option {
+  background-color: #fff;
+  color: #495057;
+}
+
+/* Additional optional styling */
+.status-dropdown:hover {
+  border-color: #007bff;
+}
+
+.btn-floating {
+  position: relative;
+  top: 50px;
+  left: 40px;
+  z-index: 9999; /* Ensure the button appears on top of other elements */
+}
+.profile-container {
+  position: relative;
+  display: inline-block;
+}
+.profile-container img {
+  display: block;
+  border-radius: 50%;
+}
+.edit-icon {
+  position: absolute;
+  bottom: 10px;
+  top: 20px;
+  right: -30px;
+  background: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+
+
+
+
