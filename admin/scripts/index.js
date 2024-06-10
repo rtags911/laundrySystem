@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  fetch(`http://localhost/laundrySystem/admin/api/laundry_queue.php`)
+  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/laundry_queue.php`)
     .then((response) => response.json())
     .then((data) => {
       if (data.error) {
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error:", error);
     });
 
-  fetch(`http://localhost/laundrySystem/admin/api/dashboard.php`)
+  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/dashboard.php`)
     .then((response) => response.json())
     .then((data) => {
       if (data.statistics) {

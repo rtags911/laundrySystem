@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     $.ajax({
       method: "PUT",
-      url: "http://localhost/laundrySystem/admin/api/staff/",
+      url: "https://ashantilaundrysystem.muccs.host/admin/api/staff/",
       headers: {
         "Content-Type": "application/json",
       }, // Set content type to JSON

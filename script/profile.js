@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     body: JSON.stringify(requestBody),
   };
 
-  fetch("http://localhost/laundrySystem/api/queue/queue.php", requestOptions)
+  fetch("https://ashantilaundrysystem.muccs.host/api/queue/queue.php", requestOptions)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   $.ajax({
-    url: "http://localhost/laundrySystem/api/file/",
+    url: "https://ashantilaundrysystem.muccs.host/api/file/",
     type: "POST",
     data: FormData,
     success: function (data) {
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#UpContact").val(test.contact);
 
       const imageUrl = test.photo
-        ? "http://localhost/laundrySystem/img/customer/" + test.photo
+        ? "https://ashantilaundrysystem.muccs.host/img/customer/" + test.photo
         : "assets/img/profile.png";
 
       document.getElementById("profile-img").src = imageUrl;
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       $.ajax({
         method: "PUT",
-        url: "http://localhost/laundrySystem/api/file/",
+        url: "https://ashantilaundrysystem.muccs.host/api/file/",
         headers: {
           "Content-Type": "application/json",
         }, // Set content type to JSON
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.push({ name: "userID", value: userID });
 
       $.ajax({
-        url: "http://localhost/laundrySystem/api/file/",
+        url: "https://ashantilaundrysystem.muccs.host/api/file/",
         type: "POST",
         data: $.param(formData),
         success: function (response) {
@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //   const formData = $(this);
 
   //   $.ajax({
-  //     url: "http://localhost/laundrySystem/api/upload/", // Adjust this URL if needed
+  //     url: "https://ashantilaundrysystem.muccs.host/api/upload/", // Adjust this URL if needed
   //     type: "POST",
   //     data: formData,
   //     processData: false,
@@ -294,7 +294,7 @@ function getCookie(name) {
 }
 
 function removeLog(logId) {
-  fetch(`http://localhost/laundrySystem/api/file/`, {
+  fetch(`https://ashantilaundrysystem.muccs.host/api/file/`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

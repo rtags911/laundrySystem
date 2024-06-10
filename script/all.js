@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(this);
     formData.append("action", "login"); // Set action to 'login'
 
-    fetch("http://localhost/laundrySystem/api/file/", {
+    fetch("https://ashantilaundrysystem.muccs.host/api/file/", {
       method: "POST",
       body: formData,
     })
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (result.isConfirmed) {
               if (level != 2) {
                 window.location.href =
-                  "http://localhost/laundrySystem/admin/index.html";
+                  "https://ashantilaundrysystem.muccs.host/admin/index.html";
               } else {
                 window.location.reload();
                 $("#authModal").modal("hide");
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const formData = new FormData(this);
       formData.append("action", "register"); // Set action to 'register'
 
-      fetch("http://localhost/laundrySystem/api/file/", {
+      fetch("https://ashantilaundrysystem.muccs.host/api/file/", {
         method: "POST",
         body: formData,
       })

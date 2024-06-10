@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  fetch(`http://localhost/laundrySystem/admin/api/laundry_queue.php`)
+  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/laundry_queue.php`)
     .then((response) => response.json())
     .then((data) => {
       if (data.error) {
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const newStatus = $(this).val();
         const selectedOption = $(this).find("option:selected").text();
 
-        fetch(`http://localhost/laundrySystem/admin/api/queue/`, {
+        fetch(`https://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const id = getCookie("id"); // Make sure you define and use the `getCookie` function
 
-  fetch(`http://localhost/laundrySystem/admin/api/staff_list.php`)
+  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/staff_list.php`)
     .then((response) => response.json())
     .then((data) => {
       if (data.error) {
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Remove the leading '&' character
 
       // Send form data with POST method
-      fetch(`http://localhost/laundrySystem/admin/api/staff/`, {
+      fetch(`https://ashantilaundrysystem.muccs.host/admin/api/staff/`, {
         method: "POST",
         body: formData,
       })
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       $.ajax({
         method: "PUT",
-        url: "http://localhost/laundrySystem/admin/api/staff/",
+        url: "https://ashantilaundrysystem.muccs.host/admin/api/staff/",
         headers: {
           "Content-Type": "application/json",
         }, // Set content type to JSON
@@ -183,7 +183,7 @@ function getCookie(name) {
 }
 
 function removeLog(logId) {
-  fetch(`http://localhost/laundrySystem/admin/api/staff/`, {
+  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/staff/`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

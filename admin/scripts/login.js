@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const formData = new FormData(loginForm);
     try {
       const response = await fetch(
-        "http://localhost/laundrySystem/admin/api/login.php",
+        "https://ashantilaundrysystem.muccs.host/admin/api/login.php",
         {
           method: "POST",
           body: formData,
