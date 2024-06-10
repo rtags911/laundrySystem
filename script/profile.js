@@ -312,6 +312,7 @@ function removeLog(logId) {
         console.log("Customer removed successfully");
         // Optionally, reload the DataTable
 
+        
         Swal.fire({
           title: "Success",
           text: "You have successfully Deleted the Queue",
