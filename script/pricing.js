@@ -17,9 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Fetch user details if ID is available
   if (userID) {
-    fetch(`https://ashantilaundrysystem.muccs.host/api/file/?userID=${userID}`, {
-      method: "GET",
-    })
+    fetch(
+      `https://ashantilaundrysystem.muccs.host/api/file/?userID=${userID}`,
+      {
+        method: "GET",
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data) {

@@ -30,9 +30,13 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmButtonText: "Ok",
           }).then((result) => {
             if (result.isConfirmed) {
-              if (level != 2) {
+              if (level == 0) {
                 window.location.href =
                   "https://ashantilaundrysystem.muccs.host/admin/index.html";
+              }
+              if (level == 1) {
+                window.location.href =
+                  "https://ashantilaundrysystem.muccs.host/staff/index.html";
               } else {
                 window.location.reload();
                 $("#authModal").modal("hide");
