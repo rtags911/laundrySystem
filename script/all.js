@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmButtonText: "Ok",
           }).then((result) => {
             if (result.isConfirmed) {
-              var level = getCookie("level");
+              var level = data.level;
               if (level == 0) {
                 window.location.href =
                   "https://ashantilaundrysystem.muccs.host/admin/index.html";
