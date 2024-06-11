@@ -61,6 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const formData = new FormData(this);
       formData.append("action", "register"); // Set action to 'register'
+      
+      console.log("form", formData);
 
       fetch("https://ashantilaundrysystem.muccs.host/api/file/", {
         method: "POST",
