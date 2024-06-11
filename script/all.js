@@ -23,24 +23,22 @@ document.addEventListener("DOMContentLoaded", () => {
           }; expires=${expirationTime.toUTCString()}; path=/`;
           var level = data.level;
           console.log("test", level);
+          console.log("Type of level cookie:", typeof level);
+
           Swal.fire({
             title: "Success!",
             text: data.message,
             icon: "success",
-            confirmButtonText: "Ok",
           }).then((result) => {
-            if (result.isConfirmed) {
-              if (level == "0") {
-                window.location.href =
-                  "https://ashantilaundrysystem.muccs.host/admin/index.html";
-              }
-              if (level == "1") {
-                window.location.href =
-                  "https://ashantilaundrysystem.muccs.host/staff/index.html";
-              } else {
-                window.location.reload();
-                $("#authModal").modal("hide");
-              }
+            if (level == 0) {
+              window.location.href =
+                "https://ashantilaundrysystem.muccs.host/admin/index.html";
+            } else if (level == 1) {
+              window.location.href =
+                "https://ashantilaundrysystem.muccs.host/staff/index.html";
+            } else {
+              window.location.reload();
+              $("#authModal").modal("hide");
             }
           });
         } else {
