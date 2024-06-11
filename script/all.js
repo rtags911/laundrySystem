@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
           document.cookie = `level=${
             data.level
           }; expires=${expirationTime.toUTCString()}; path=/`;
-          var level = getCookie("level");
 
           Swal.fire({
             title: "Success!",
@@ -30,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmButtonText: "Ok",
           }).then((result) => {
             if (result.isConfirmed) {
+              var level = getCookie("level");
               if (level == 0) {
                 window.location.href =
                   "https://ashantilaundrysystem.muccs.host/admin/index.html";
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const formData = new FormData(this);
       formData.append("action", "register"); // Set action to 'register'
-      
+
       console.log("form", formData);
 
       fetch("https://ashantilaundrysystem.muccs.host/api/file/", {
