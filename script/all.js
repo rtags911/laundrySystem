@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
           document.cookie = `level=${
             data.level
           }; expires=${expirationTime.toUTCString()}; path=/`;
-
+          var level = data.level;
+          console.log("test", level);
           Swal.fire({
             title: "Success!",
             text: data.message,
@@ -29,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
             confirmButtonText: "Ok",
           }).then((result) => {
             if (result.isConfirmed) {
-              var level = data.level;
               if (level == 0) {
                 window.location.href =
                   "https://ashantilaundrysystem.muccs.host/admin/index.html";
