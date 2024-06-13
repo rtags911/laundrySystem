@@ -60,38 +60,38 @@ document.addEventListener("DOMContentLoaded", () => {
           { title: "Date Created" },
           { title: "Option" },
         ],
-        initComplete: function () {
-          this.api()
-            .columns(4) // column index (Status column)
-            .every(function () {
-              var column = this;
-              var select = $(
-                '<select><option value="">Select Status</option></select>'
-              )
-                .appendTo($(column.header()).empty())
-                .on("change", function () {
-                  var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                  table.rows().search(val).draw();
-                });
-
-              var statuses = [
-                "Pending",
-                "Processing",
-                "Folding",
-                "Ready for Pickup",
-                "Claimed",
-              ];
-              $.each(statuses, function (index, status) {
-                select.append(
-                  '<option value="' + status + '">' + status + "</option>"
-                );
-              });
-            });
-        },
         paging: true,
         searching: true,
         info: true,
       });
+
+
+       $("#dataTable tbody").on(
+         "click",
+         'a[data-bs-target="#remove"]',
+         function () {
+           const logId = $(this).data("id");
+
+           // Set the log ID to the hidden input field in the delete form
+           $("#deleteForm input[name='data_id']").val(logId);
+         }
+       );
+
+       $("#deleteForm").on("submit", function (event) {
+         // Prevent the default form submission behavior
+         event.preventDefault();
+
+         // Get the log ID from the hidden input field
+         const logId = $("#deleteForm input[name='data_id']").val();
+
+         removeLog(logId);
+
+         // Close the modal (if needed)
+         $("#remove").modal("hide");
+       });
+
+
+
 
       // Add event listener for status dropdown change
       table.on("change", ".status-dropdown", function () {
@@ -125,4 +125,44 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch((error) => {
       console.error("Error:", error);
     });
+
+
+
 });
+
+function removeLog(logId) {
+  fetch(`https://ashantilaundrysystem.muccs.host/api/queue/`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ data_id: logId }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.message) {
+        console.log("Customer removed successfully");
+        // Optionally, reload the DataTable
+        $("#dataTable").DataTable().ajax.reload();
+
+        Swal.fire({
+          title: "Success",
+          text: "You have successfully Deleted the Queue",
+          icon: "success",
+          confirmButtonText: "Ok",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      } else {
+        window.location.reload();
+      }
+    })
+    .catch((error) => window.location.reload());
+}
