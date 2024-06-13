@@ -63,6 +63,32 @@ document.addEventListener("DOMContentLoaded", () => {
         paging: true,
         searching: true,
         info: true,
+        initComplete: function () {
+          // Add column filtering for Status column
+          this.api()
+            .columns([4])
+            .every(function () {
+              var column = this;
+              var select = $(
+                '<select class="form-select"><option value="">Filter Status</option></select>'
+              )
+                .appendTo($(column.header()).empty())
+                .on("change", function () {
+                  var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                  column.search(val ? "^" + val + "$" : "", true, false).draw();
+                });
+
+              // Populate select options from column data
+              column
+                .data()
+                .unique()
+                .sort()
+                .each(function (d, j) {
+                  select.append('<option value="' + d + '">' + d + "</option>");
+                });
+            });
+        },
       });
 
       // Add event listener for status dropdown change

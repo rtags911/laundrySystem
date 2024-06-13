@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", function () {
       confirmButtonText: "Ok",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "https://ashantilaundrysystem.muccs.host/index.html";
+        window.location.href =
+          "https://ashantilaundrysystem.muccs.host/index.html";
       }
     });
   }
@@ -55,13 +56,14 @@ function logoutAndClearCookies() {
   document.cookie = "level=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
   Swal.fire({
-    title: "Error!",
+    title: "Success!",
     text: "You have Log Out",
-    icon: "error",
+    icon: "success",
     confirmButtonText: "Ok",
   }).then((result) => {
     if (result.isConfirmed) {
-      window.location.href = "https://ashantilaundrysystem.muccs.host/index.html";
+      window.location.href =
+        "https://ashantilaundrysystem.muccs.host/index.html";
     }
   });
 }
