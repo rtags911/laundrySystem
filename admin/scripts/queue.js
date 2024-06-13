@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+$(document).ready(function () {
   fetch(`https://ashantilaundrysystem.muccs.host/admin/api/laundry_queue.php`)
     .then((response) => response.json())
     .then((data) => {
@@ -12,115 +12,138 @@ document.addEventListener("DOMContentLoaded", () => {
         row.queueNumber = index + 1;
       });
 
-      const tableData = data.map((row) => {
-        return [
-          `#${row.queueNumber}`,
-          `<img class="rounded-circle me-2" width="30" height="30" src="assets/img/profile.png">${row.name}`,
-          row.type,
-          row.kilo,
-          `<select class="status-dropdown form-select" data-id="${row.id}">
-            <option value="0" ${
-              row.status === 0 ? "selected" : ""
-            }>Pending</option>
-            <option value="1" ${
-              row.status === 1 ? "selected" : ""
-            }>Processing</option>
-            <option value="2" ${
-              row.status === 2 ? "selected" : ""
-            }>Folding</option>
-            <option value="3" ${
-              row.status === 3 ? "selected" : ""
-            }>Ready for Pickup</option>
-            <option value="4" ${
-              row.status === 4 ? "selected" : ""
-            }>Claimed</option>
-          </select>`,
-          `₱${row.total}`, // Adding PHP sign here
-          row.created_at,
-          `<a class="mx-1 text-decoration-none text-danger" href="#" data-bs-target="#remove"  data-id="${row.id}" data-bs-toggle="modal">
-            <i class="far fa-trash-alt text-danger" style="font-size: 20px;"></i> Remove</a>`,
-        ];
-      });
-
-      const table = $("#dataTable");
-
-      if ($.fn.dataTable.isDataTable(table)) {
-        table.DataTable().clear().destroy();
-      }
-
-      table.DataTable({
-        data: tableData,
+      const table = $("#dataTable").DataTable({
+        data: data,
         columns: [
-          { title: "Queue" },
-          { title: "Customer" },
-          { title: "Type" },
-          { title: "Kilo kg/p" },
-          { title: "Status" },
-          { title: "Total" },
-          { title: "Date Created" },
-          { title: "Option" },
+          { title: "Queue", data: "queueNumber" },
+          {
+            title: "Customer",
+            data: "name",
+            render: function (data, type, row) {
+              return `<img class="rounded-circle me-2" width="30" height="30" src="assets/img/profile.png">${data}`;
+            },
+          },
+          { title: "Type", data: "type" },
+          { title: "Kilo kg/p", data: "kilo" },
+          {
+            title: "Status",
+            data: "status",
+            render: function (data, type, row) {
+              return `<select class="form-select status-dropdown" data-id="${
+                row.id
+              }">
+                            <option value="0" ${
+                              data === 0 ? "selected" : ""
+                            }>Pending</option>
+                            <option value="1" ${
+                              data === 1 ? "selected" : ""
+                            }>Processing</option>
+                            <option value="2" ${
+                              data === 2 ? "selected" : ""
+                            }>Folding</option>
+                            <option value="3" ${
+                              data === 3 ? "selected" : ""
+                            }>Ready for Pickup</option>
+                            <option value="4" ${
+                              data === 4 ? "selected" : ""
+                            }>Claimed</option>
+                        </select>`;
+            },
+          },
+          {
+            title: "Total",
+            data: "total",
+            render: function (data, type, row) {
+              return `₱${data}`;
+            },
+          },
+          { title: "Date Created", data: "created_at" },
+          {
+            title: "Option",
+            data: "id",
+            render: function (data, type, row) {
+              return `<a class="mx-1 text-decoration-none text-danger" href="#" data-bs-target="#remove" data-id="${data}" data-bs-toggle="modal">
+                            <i class="far fa-trash-alt text-danger" style="font-size: 20px;"></i> Remove
+                        </a>`;
+            },
+          },
         ],
         paging: true,
         searching: true,
         info: true,
         initComplete: function () {
-          // Add column filtering for Status column
-          this.api()
-            .columns([4])
-            .every(function () {
-              var column = this;
-              var select = $(
-                '<select class="form-select"><option value="">Filter Status</option></select>'
-              )
-                .appendTo($(column.header()).empty())
-                .on("change", function () {
-                  var val = $.fn.dataTable.util.escapeRegex($(this).val());
+          // Add dropdown to the "Status" column header for filtering
+          var column = this.api().column(4);
+          var select = $(
+            '<select class="form-select"><option value="">Filter Status</option></select>'
+          )
+            .appendTo($(column.header()).empty())
+            .on("change", function () {
+              var val = $.fn.dataTable.util.escapeRegex($(this).val());
 
-                  column.search(val ? "^" + val + "$" : "", true, false).draw();
-                });
+              column.search(val ? "^" + val + "$" : "", true, false).draw();
+            });
 
-              // Populate select options from column data
-              column
-                .data()
-                .unique()
-                .sort()
-                .each(function (d, j) {
-                  select.append('<option value="' + d + '">' + d + "</option>");
-                });
+          // Populate dropdown with unique status values
+          column
+            .data()
+            .unique()
+            .sort()
+            .each(function (d, j) {
+              select.append(
+                '<option value="' + d + '">' + getStatusText(d) + "</option>"
+              );
             });
         },
-      });
-
-      // Add event listener for status dropdown change
-      table.on("change", ".status-dropdown", function () {
-        const id = $(this).data("id");
-        const newStatus = $(this).val();
-        const selectedOption = $(this).find("option:selected").text();
-
-        fetch(`https://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: id,
-            status: newStatus,
-            action: "statusUp",
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              alert("Status updated successfully to " + selectedOption + "!");
-              location.reload();
-            } else {
-              alert("Failed to update status: " + data.message);
-            }
-          })
-          .catch((error) => console.error("Error updating status:", error));
       });
     })
     .catch((error) => {
       console.error("Error:", error);
     });
+
+  // Event listener for status dropdown change
+  $("#dataTable").on("change", ".status-dropdown", function () {
+    const id = $(this).data("id");
+    const newStatus = $(this).val();
+    const selectedOption = $(this).find("option:selected").text();
+
+    fetch(`https://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        status: newStatus,
+        action: "statusUp",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Status updated successfully to " + selectedOption + "!");
+          location.reload(); // Refresh the page after successful status update
+        } else {
+          alert("Failed to update status: " + data.message);
+        }
+      })
+      .catch((error) => console.error("Error updating status:", error));
+  });
+
+  function getStatusText(status) {
+    switch (status) {
+      case 0:
+        return "Pending";
+      case 1:
+        return "Processing";
+      case 2:
+        return "Folding";
+      case 3:
+        return "Ready for Pickup";
+      case 4:
+        return "Claimed";
+      default:
+        return "Unknown";
+    }
+  }
 });
