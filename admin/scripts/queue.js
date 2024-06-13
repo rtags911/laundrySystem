@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function removeLog(logId) {
-  fetch(`https://ashantilaundrysystem.muccs.host/api/queue/`, {
+  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

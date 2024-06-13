@@ -198,13 +198,13 @@ function removeLog(logId) {
     })
     .then((data) => {
       if (data.message) {
-        console.log("Customer removed successfully");
+        console.log("staff removed successfully");
         // Optionally, reload the DataTable
         $("#dataTable").DataTable().ajax.reload();
 
         Swal.fire({
           title: "Success",
-          text: "You have successfully Deleted the Customer",
+          text: "You have successfully Deleted the Staff",
           icon: "success",
           confirmButtonText: "Ok",
         }).then((result) => {
