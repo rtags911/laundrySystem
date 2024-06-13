@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .appendTo($(column.header()).empty())
                 .on("change", function () {
                   var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                  column.search(val ? "^" + val + "$" : "", true, false).draw();
+                  table.rows().search(val).draw();
                 });
 
               var statuses = [
