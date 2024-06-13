@@ -46,9 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Reload the page
     if (window.location.pathname.includes("profile.html")) {
       Swal.fire({
-        title: "Error!",
+        title: "Success!",
         text: "You Have logged Out.",
-        icon: "error",
+        icon: "success",
         confirmButtonText: "Ok",
       }).then((result) => {
         if (result.isConfirmed) {
