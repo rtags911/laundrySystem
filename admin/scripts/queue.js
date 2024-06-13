@@ -60,27 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
           { title: "Date Created" },
           { title: "Option" },
         ],
-        columnDefs: [
-          {
-            targets: 4, // column index (Status column)
-            render: function (data, type, row) {
-              return data;
-            },
-            filter: {
-              type: "select",
-              options: [
-                { value: "0", label: "Pending" },
-                { value: "1", label: "Processing" },
-                { value: "2", label: "Folding" },
-                { value: "3", label: "Ready for Pickup" },
-                { value: "4", label: "Claimed" },
-              ],
-            },
-          },
-        ],
         initComplete: function () {
           this.api()
-            .columns(4)
+            .columns(4) // column index (Status column)
             .every(function () {
               var column = this;
               var select = $(
@@ -92,13 +74,18 @@ document.addEventListener("DOMContentLoaded", () => {
                   column.search(val ? "^" + val + "$" : "", true, false).draw();
                 });
 
-              column
-                .data()
-                .unique()
-                .sort()
-                .each(function (d, j) {
-                  select.append('<option value="' + d + '">' + d + "</option>");
-                });
+              var statuses = [
+                "Pending",
+                "Processing",
+                "Folding",
+                "Ready for Pickup",
+                "Claimed",
+              ];
+              $.each(statuses, function (index, status) {
+                select.append(
+                  '<option value="' + index + '">' + status + "</option>"
+                );
+              });
             });
         },
         paging: true,
