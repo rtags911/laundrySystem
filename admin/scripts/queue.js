@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ];
               $.each(statuses, function (index, status) {
                 select.append(
-                  '<option value="' + index + '">' + status + "</option>"
+                  '<option value="' + status + '">' + status + "</option>"
                 );
               });
             });
