@@ -13,51 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const tableData = data.map((row) => {
-        const isPending = row.status === 0;
-        const isClaimed = row.status === 4;
 
-        // Determine if cancel button should be disabled
-        const cancelDisabled = !isPending || isClaimed;
-        const toggleModal = isPending ? "modal" : "";
-
-        // Determine photo URL with fallback
-        const photoUrl = row.photo
-          ? `http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}`
-          : `http://ashantilaundrysystem.muccs.host/assets/profile.png`;
-
-        // Determine text color class
         const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
 
         return [
-          `#${row.queueNumber}`,
-          `<img class="rounded-circle me-2" width="30" height="30" src="${photoUrl}">${row.name}`,
-          row.type,
-          row.kilo,
-          `<select class="status-dropdown form-select" data-id="${row.id}" ${
-            isClaimed ? "disabled" : ""
-          }>
-                        <option value="0" ${
-                          row.status === 0 ? "selected" : ""
-                        }>Pending</option>
-                        <option value="1" ${
-                          row.status === 1 ? "selected" : ""
-                        }>Processing</option>
-                        <option value="2" ${
-                          row.status === 2 ? "selected" : ""
-                        }>Folding</option>
-                        <option value="3" ${
-                          row.status === 3 ? "selected" : ""
-                        }>Ready for Pickup</option>
-                        <option value="4" ${
-                          row.status === 4 ? "selected" : ""
-                        }>Claimed</option>
-                        <option value="5" ${
-                          row.status === 5 ? "selected" : ""
-                        }>Cancelled</option>
-                    </select>`,
-          `₱${row.total}`, // Adding PHP sign here
-          row.created_at,
-          row.date_booked,
+         
           `<a class="mx-1 text-decoration-none ${textColorClass} ${
             cancelDisabled ? "disabled" : ""
           }" href="#" 
@@ -125,6 +85,34 @@ document.addEventListener("DOMContentLoaded", () => {
         $("#remove").modal("hide");
       });
 
+      table.on("change", ".type-dropdown", function () {
+        const id = $(this).data("id");
+        const newType = $(this).val(); // Convert to integer
+        const selectedOption = $(this).find("option:selected").text();
+
+        fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: id,
+            type: newType,
+            action: "type",
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Status updated successfully to " + selectedOption + "!");
+              location.reload();
+            } else {
+              alert("Failed to update status: " + data.message);
+            }
+          })
+          .catch((error) => console.error("Error updating status:", error));
+      });
+
       // Add event listener for status dropdown change
       table.on("change", ".status-dropdown", function () {
         const id = $(this).data("id");
@@ -169,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
-              alert("Status updated successfully to " + selectedOption + "!");
+              alert("Type updated successfully to " + selectedOption + "!");
               location.reload();
             } else {
               alert("Failed to update status: " + data.message);
@@ -205,7 +193,7 @@ function removeLog(logId) {
 
         Swal.fire({
           title: "Success",
-          text: "You have successfully Cancelled the Queue",
+          text: "You have successfully Deleted the Queue",
           icon: "success",
           confirmButtonText: "Ok",
         }).then((result) => {
