@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
        table.on("change", ".type-dropdown", function () {
 
             const id = $(this).data("id");
-            const newType = parseInt($(this).val()); // Convert to integer
+            const newType =$(this).val(); // Convert to integer
             const selectedOption = $(this).find("option:selected").text();
 
 
