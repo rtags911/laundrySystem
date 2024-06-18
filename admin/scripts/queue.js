@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Determine photo URL with fallback
         const photoUrl = row.photo
           ? `http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}`
-          : `http://ashantilaundrysystem.muccs.host/assets/profile.png`;
+          : `http://ashantilaundrysystem.muccs.host/assets/img/profile.png`;
 
         // Determine text color class
         const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
@@ -140,43 +140,33 @@ document.addEventListener("DOMContentLoaded", () => {
         $("#remove").modal("hide");
       });
 
-       table.on("change", ".type-dropdown", function () {
+      table.on("change", ".type-dropdown", function () {
+        const id = $(this).data("id");
+        const newType = $(this).val(); // Convert to integer
+        const selectedOption = $(this).find("option:selected").text();
 
-            const id = $(this).data("id");
-            const newType =$(this).val(); // Convert to integer
-            const selectedOption = $(this).find("option:selected").text();
-
-
-             fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
-               method: "POST",
-               headers: {
-                 "Content-Type": "application/json",
-               },
-               body: JSON.stringify({
-                 id: id,
-                 type: newType,
-                 action: "type",
-               }),
-             })
-               .then((response) => response.json())
-               .then((data) => {
-                 if (data.success) {
-                   alert(
-                     "Status updated successfully to " + selectedOption + "!"
-                   );
-                   location.reload();
-                 } else {
-                   alert("Failed to update status: " + data.message);
-                 }
-               })
-               .catch((error) =>
-                 console.error("Error updating status:", error)
-               );
-
-
-
-       });
-
+        fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: id,
+            type: newType,
+            action: "type",
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Status updated successfully to " + selectedOption + "!");
+              location.reload();
+            } else {
+              alert("Failed to update status: " + data.message);
+            }
+          })
+          .catch((error) => console.error("Error updating status:", error));
+      });
 
       // Add event listener for status dropdown change
       table.on("change", ".status-dropdown", function () {
