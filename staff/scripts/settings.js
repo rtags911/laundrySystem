@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("user", test);
 
       const imageUrl = test.photo
-        ? "http://ashantilaundrysystem.muccs.host/img/admin/" + test.photo
+        ? "http://ashantilaundrysystem.muccs.host/img/staff/" + test.photo
         : "assets/img/profile.png";
 
       document.getElementById("profile-img").src = imageUrl;
@@ -72,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-
   const userId = getCookie("id");
   const levels = getCookie("level"); // Replace this with actual logic
   // Replace this with actual logic
@@ -86,8 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
     $("#user-id").val(userId);
     $("#level").val(levels);
   });
-
-
 
   $("#uploadPic").on("submit", function (e) {
     e.preventDefault();
@@ -115,9 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     });
   });
-
-
-
 });
 
 function getCookie(name) {
