@@ -227,6 +227,6 @@ function getImageSrc(role, photo) {
   } else if (role === "admin") {
     return `http://ashantilaundrysystem.muccs.host/img/admin/${photo}`;
   } else {
-    return "assets/img/profile.png"; // Default image path if role is neither 'staff' nor 'admin'
+    return "http://ashantilaundrysystem.muccs.host/assets/img/profile.png"; // Default image path if role is neither 'staff' nor 'admin'
   }
 }
