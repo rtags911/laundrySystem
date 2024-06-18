@@ -32,7 +32,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return [
           `#${row.queueNumber}`,
           `<img class="rounded-circle me-2" width="30" height="30" src="${photoUrl}">${row.name}`,
-          row.type,
+          // row.type,
+          `<select class="type-dropdown form-select" data-id="${row.id}">
+            <option value="washFold" ${
+              row.type === "washFold" ? "selected" : ""
+            }>Wash and Fold</option>
+            <option value="suitClean" ${
+              row.type === "suitClean" ? "selected" : ""
+            }>Suit Clean</option>
+            <option value="curtainClean" ${
+              row.type === "curtainClean" ? "selected" : ""
+            }>Curtain</option>
+            <option value="notAvailable" ${
+              row.type === "notAvailable" ? "selected" : ""
+            }>Not Available</option>
+          </select>`,
           row.kilo,
           `<select class="status-dropdown form-select" data-id="${row.id}" ${
             isClaimed ? "disabled" : ""
@@ -125,6 +139,44 @@ document.addEventListener("DOMContentLoaded", () => {
         // Close the modal (if needed)
         $("#remove").modal("hide");
       });
+
+       table.on("change", ".type-dropdown", function () {
+
+            const id = $(this).data("id");
+            const newType = parseInt($(this).val()); // Convert to integer
+            const selectedOption = $(this).find("option:selected").text();
+
+
+             fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
+               method: "POST",
+               headers: {
+                 "Content-Type": "application/json",
+               },
+               body: JSON.stringify({
+                 id: id,
+                 type: newType,
+                 action: "type",
+               }),
+             })
+               .then((response) => response.json())
+               .then((data) => {
+                 if (data.success) {
+                   alert(
+                     "Status updated successfully to " + selectedOption + "!"
+                   );
+                   location.reload();
+                 } else {
+                   alert("Failed to update status: " + data.message);
+                 }
+               })
+               .catch((error) =>
+                 console.error("Error updating status:", error)
+               );
+
+
+
+       });
+
 
       // Add event listener for status dropdown change
       table.on("change", ".status-dropdown", function () {

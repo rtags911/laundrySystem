@@ -17,6 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action == "statusUp") {
             statusUp($db, $data);
         }
+    }
+    if (isset($data['action'])) {
+        $action = $data['action'];
+
+        if ($action == "type") {
+            typeUp($db, $data);
+        }
     } else {
         echo json_encode(array("success" => false, "message" => "Action not set"));
     }
@@ -40,6 +47,27 @@ function statusUp($db, $data)
             echo json_encode(array("success" => true, "message" => "Status updated successfully"));
         } else {
             echo json_encode(array("success" => false, "message" => "Failed to update status"));
+        }
+    } else {
+        echo json_encode(array("success" => false, "message" => "Invalid input"));
+    }
+}
+function typeUp($db, $data)
+{
+    if (isset($data['id']) && isset($data['type'])) {
+        $id = $data['id'];
+        $type = $data['type'];
+
+        // Prepare the SQL statement
+        $sql = "UPDATE books SET type = ? WHERE id = ?";
+        $stmt = $db->prepare($sql);
+        $result = $stmt->execute([$type, $id]);
+
+        // Check if the update was successful
+        if ($result) {
+            echo json_encode(array("success" => true, "message" => "Type updated successfully"));
+        } else {
+            echo json_encode(array("success" => false, "message" => "Failed to update Type"));
         }
     } else {
         echo json_encode(array("success" => false, "message" => "Invalid input"));

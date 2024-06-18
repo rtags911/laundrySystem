@@ -5,6 +5,7 @@ $host = 'localhost';
 $dbname = 'u663034616_laundry';
 $username = 'u663034616_laundry';
 $password = 'D1h41pesgx911!';
+
 try {
     $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
