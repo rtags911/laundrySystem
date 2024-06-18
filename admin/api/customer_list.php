@@ -17,6 +17,7 @@ foreach ($results as $row) {
         'address' => $row['address'],
         'contact' => $row['contact'],
         'created_at' => $row['created_at'], // Assuming created_at exists in your database table
+        'photo' => $row['photo'], // Assuming created_at exists in your database table
         // Add more fields if necessary for your DataTables configuration
     );
 

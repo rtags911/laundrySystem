@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const [firstName, lastName] = fullname.split(" ");
         return [
           row.id,
-          `<img class="rounded-circle me-2" width="30" height="30" src="assets/img/profile.png">${row.fullname}`,
+        `<img class="rounded-circle me-2" width="30" height="30" src="http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}">${row.fullname}`,
           row.username,
           row.address,
           row.contact,
@@ -251,3 +251,5 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 });
+
+
