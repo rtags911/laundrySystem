@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const id = getCookie("id"); // Make sure you define and use the `getCookie` function
-
-  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/customer_list.php`)
+  fetch(`http://ashantilaundrysystem.muccs.host/admin/api/customer_list.php`)
     .then((response) => response.json())
     .then((data) => {
-      if (data.error) {
-        console.error(data.error);
+      // Check if data is valid
+      if (!data || !data.data) {
+        console.error("Invalid data received from server");
         return;
       }
 
-      const tableData = data.map((row) => {
+      // Map data to format expected by DataTables
+      const tableData = data.data.map((row) => {
         const fullname = row.fullname || "";
         const [firstName, lastName] = fullname.split(" ");
         return [
@@ -25,14 +25,16 @@ document.addEventListener("DOMContentLoaded", function () {
             firstName || ""
           }" data-lastname="${lastName || ""}" data-address="${
             row.address || ""
-          }" data-contact="${row.contact || ""}" >
+          }" data-contact="${row.contact || ""}">
             <i class="far fa-edit text-warning" style="font-size: 20px;"></i> Update</a>
-           <a class="mx-1 text-decoration-none text-danger" href="#" data-bs-target="#remove"  data-id="${
-             row.id
-           }" data-bs-toggle="modal">
+            <a class="mx-1 text-decoration-none text-danger" href="#" data-bs-target="#remove"  data-id="${
+              row.id
+            }" data-bs-toggle="modal">
             <i class="far fa-trash-alt text-danger" style="font-size: 20px;"></i> Remove</a>`,
         ];
       });
+
+      // Initialize DataTable
       const table = $("#dataTable");
 
       if ($.fn.dataTable.isDataTable(table)) {
@@ -55,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
         info: true,
       });
 
-      // Event delegation for dynamically created links
+      // Event handling for dynamically created links
       $("#dataTable tbody").on(
         "click",
         'a[data-bs-target="#update"]',
@@ -67,6 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const contact = $(this).data("contact");
           const username = $(this).data("username");
 
+          // Populate modal fields for update
           $("#editID").val(logId);
           $("#editUsername").val(username);
           $("#editFirstname").val(firstname);
@@ -86,68 +89,55 @@ document.addEventListener("DOMContentLoaded", function () {
           $("#deleteForm input[name='data_id']").val(logId);
         }
       );
-
-      $("#deleteForm").on("submit", function (event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        // Get the log ID from the hidden input field
-        const logId = $("#deleteForm input[name='data_id']").val();
-
-        removeLog(logId);
-
-        // Close the modal (if needed)
-        $("#remove").modal("hide");
-      });
     })
     .catch((error) => {
       console.error("Error:", error);
     });
 
+  // Event listener for adding a customer
   document
     .getElementById("addCustomer")
     .addEventListener("submit", function (event) {
-      event.preventDefault(); // Prevent the default form submission
+      event.preventDefault(); // Prevent form submission
 
-      // Get form data
       const formData = new FormData(this);
 
-      // Construct query string from form data
-
-      // Remove the leading '&' character
-
-      // Send form data with POST method
-      fetch(`https://ashantilaundrysystem.muccs.host/admin/api/customer/`, {
+      fetch(`http://ashantilaundrysystem.muccs.host/admin/api/customer/`, {
         method: "POST",
         body: formData,
       })
         .then((response) => response.json())
         .then((data) => {
-          Swal.fire({
-            title: "Success",
-            text: data.message,
-            icon: "success",
-            confirmButtonText: "Ok",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.reload();
-            } else {
-              Swal.fire({
-                title: "Error",
-                text: data.message,
-                icon: "error",
-                confirmButtonText: "Ok",
-              });
-            }
-          });
+          if (data.success) {
+            // Reload the DataTable on successful addition
+         
+            Swal.fire({
+              title: "Success",
+              text: data.message,
+              icon: "success",
+              confirmButtonText: "Ok",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: data.message,
+              icon: "error",
+              confirmButtonText: "Ok",
+            });
+          }
         })
         .catch((error) => console.error("Error:", error));
     });
 
+  // Event listener for updating a customer
   document
     .getElementById("updateCustomer")
     .addEventListener("submit", function (event) {
-      event.preventDefault(); // Prevent the default form submission
+      event.preventDefault(); // Prevent form submission
 
       const logId = $("#updateCustomer input[name='id']").val();
       const firstname = $("#updateCustomer input[name='firstname']").val();
@@ -155,24 +145,82 @@ document.addEventListener("DOMContentLoaded", function () {
       const address = $("#updateCustomer input[name='address']").val();
       const contact = $("#updateCustomer input[name='contact']").val();
       const username = $("#updateCustomer input[name='username']").val();
-      // Construct the query string
-      var queryString = {
+      const password = $("#updateCustomer input[name='password']").val();
+      const repassword = $("#updateCustomer input[name='re-password']").val();
+
+      const queryString = {
         data_id: logId,
         firstname: firstname,
         lastname: lastname,
         address: address,
         contact: contact,
         username: username,
+        password: password,
+        repassword: repassword,
       };
 
+      // Perform AJAX PUT request for updating customer
       $.ajax({
         method: "PUT",
-        url: "https://ashantilaundrysystem.muccs.host/admin/api/customer/",
+        url: "http://ashantilaundrysystem.muccs.host/admin/api/customer/",
         headers: {
           "Content-Type": "application/json",
-        }, // Set content type to JSON
+        },
         data: JSON.stringify(queryString),
         success: function (data) {
+          if (data.success) {
+            // Reload the DataTable on successful update
+        
+
+            Swal.fire({
+              title: "Success",
+              text: data.message,
+              icon: "success",
+              confirmButtonText: "Ok",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: data.message,
+              icon: "error",
+              confirmButtonText: "Ok",
+            });
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("Error:", error);
+        },
+      });
+    });
+
+  // Event listener for deleting a customer
+  $("#deleteForm").on("submit", function (event) {
+    event.preventDefault(); // Prevent form submission
+
+    const logId = $("#deleteForm input[name='data_id']").val();
+
+    // Perform AJAX DELETE request for deleting customer
+    fetch(`http://ashantilaundrysystem.muccs.host/admin/api/customer/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data_id: logId }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          // Reload the DataTable on successful deletion
+       
           Swal.fire({
             title: "Success",
             text: data.message,
@@ -181,72 +229,25 @@ document.addEventListener("DOMContentLoaded", function () {
           }).then((result) => {
             if (result.isConfirmed) {
               window.location.reload();
-            } else {
-              Swal.fire({
-                title: "Error",
-                text: data.message,
-                icon: "error",
-                confirmButtonText: "Ok",
-              });
             }
           });
-        },
-        error: function (xhr, status, error) {
-          console.error("Error:", error);
-        },
-      });
-    });
-});
-
-function getCookie(name) {
-  const cname = name + "=";
-  const decodedCookie = decodeURIComponent(document.cookie);
-  const ca = decodedCookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(cname) == 0) {
-      return c.substring(cname.length, c.length);
-    }
-  }
-  return "";
-}
-
-function removeLog(logId) {
-  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/customer/`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ data_id: logId }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      if (data.message) {
-        console.log("Customer removed successfully");
-        // Optionally, reload the DataTable
-        $("#dataTable").DataTable().ajax.reload();
-
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: data.message,
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
         Swal.fire({
-          title: "Success",
-          text: "You have successfully Deleted the Customer",
-          icon: "success",
+          title: "Error",
+          text: "Failed to delete customer",
+          icon: "error",
           confirmButtonText: "Ok",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.reload();
-          }
         });
-      } else {
-        window.location.reload();
-      }
-    })
-    .catch((error) => window.location.reload());
-}
+      });
+  });
+});

@@ -34,8 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
       confirmButtonText: "Ok",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href =
-          "https://ashantilaundrysystem.muccs.host/index.html";
+        window.location.href = "http://localhost/laundrySystem/index.html";
       }
     });
   }
@@ -55,15 +54,43 @@ function logoutAndClearCookies() {
   document.cookie = "type=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "level=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-  Swal.fire({
-    title: "Success!",
-    text: "You have Log Out",
-    icon: "success",
-    confirmButtonText: "Ok",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href =
-        "https://ashantilaundrysystem.muccs.host/index.html";
-    }
-  });
+  // Send POST request to logout.php
+  fetch("http://localhost/laundrySystem/admin/api/logout.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ logout: true }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        Swal.fire({
+          title: "Success!",
+          text: "You have logged out",
+          icon: "success",
+          confirmButtonText: "Ok",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "http://localhost/laundrySystem/index.html";
+          }
+        });
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "Logout failed",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "An error occurred while logging out",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    });
 }

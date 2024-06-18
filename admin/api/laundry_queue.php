@@ -2,7 +2,7 @@
 include_once '../api/function/conn.php';
 
 // SQL query to fetch data from books table joined with customers table
-$sql = 'SELECT * from books';
+$sql = 'SELECT * from books ORDER BY created_at DESC ';
 
 // Prepare and execute the SQL query
 $stmt = $db->prepare($sql);

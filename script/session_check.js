@@ -33,6 +33,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const avatarImg = avatarDropdown.querySelector("img");
     const avatarUrl = getCookie("avatarUrl") || "/img/placeholder1.jpg";
     avatarImg.src = avatarUrl;
+
+
+
+      const userID = getCookie("id"); // Retrieve user ID from cookies
+
+      if (userID) {
+        const formData = { id: userID, action: "profile" }; // Prepare form data for POST request
+
+        // Make a POST request to fetch user details
+        $.ajax({
+          url: "http://ashantilaundrysystem.muccs.host/api/file/",
+          type: "POST",
+          data: formData,
+          success: function (data) {
+            try {
+              const userData = JSON.parse(data)[0]; // Assuming response is an array with user data
+
+            
+              // Update avatar dropdown image (if needed)
+              const avatarDropdownImg = document.querySelector(
+                "#avatarDropdown img"
+              );
+              if (avatarDropdownImg) {
+                const avatarUrl = userData.photo
+                  ? "http://ashantilaundrysystem.muccs.host/img/customer/" +
+                    userData.photo
+                  : "/img/placeholder1.jpg"; // Default placeholder image
+                avatarDropdownImg.src = avatarUrl;
+                avatarDropdownImg.alt = userData.fullname; // Set alt attribute dynamically
+              }
+            } catch (error) {
+              console.error("Error parsing JSON:", error);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("Error fetching user data:", error);
+          },
+        });
+      }
+
   }
 
   // Handle logout
@@ -57,9 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } else {
       Swal.fire({
-        title: "Error!",
+        title: "success!",
         text: "You Have logged Out.",
-        icon: "error",
+        icon: "success",
         confirmButtonText: "Ok",
       }).then((result) => {
         if (result.isConfirmed) {

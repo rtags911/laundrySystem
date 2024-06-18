@@ -1,5 +1,5 @@
 <?php
-include_once '../functions/connection.php';
+include_once '../api/function/conn.php';
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -9,7 +9,7 @@ header('Access-Control-Allow-Credentials: true');
 $user_id = isset($_GET['id']) ? $_GET['id'] : null;
 
 if ($user_id) {
-    $sql = 'SELECT * FROM logs WHERE user_id = :user_id';
+    $sql = 'SELECT * FROM logs WHERE user_id = :user_id  ORDER BY created_at DESC ';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();

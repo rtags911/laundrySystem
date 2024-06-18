@@ -43,7 +43,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="staff.html"
-                ><i class="fas fa-user"></i><span>Staff & Admin</span></a
+                ><i class="fas fa-user"></i><span>Staff</span></a
               >
             </li>
             <li class="nav-item">
@@ -92,8 +92,15 @@
                     <div class="row mb-3">
                         <div class="col-lg-4">
                             <div class="card mb-3">
-                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4"
-                                        src="assets/img/profile.png" width="160" height="160">
+                                <div class="card-body text-center shadow">  <img
+                        id="profile-img"
+                        class="rounded-circle mb-3 mt-4"
+                        src=""
+                        width="160"
+                        height="160"
+                        id = "profile-img"
+                    />
+                    <i id="edit-icon" class="fas fa-pencil-alt edit-icon" style="cursor: pointer;"></i>
                                     <div class="mb-3"></div><strong>My Account</strong>
                                 </div>
                             </div>
@@ -144,6 +151,32 @@
             </div>
 
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+
+
+    
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Profile Picture</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadPic" enctype="multipart/form-data">
+                        <input type="text" id="user-id" name="id">
+                        <input type="text" id="level" name="level" value="costumer">
+                        <div class="form-group">
+                            <label for="file-input">Choose a profile picture</label>
+                            <input type="file" id="file-input" name="photo" accept="image/*" class="form-control-file">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 

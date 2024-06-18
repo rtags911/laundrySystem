@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   var id = getCookie("id");
 
-  fetch(`https://ashantilaundrysystem.muccs.host/admin/api/logs.php?id=${id}`)
+  fetch(`http://ashantilaundrysystem.muccs.host/admin/api/logs.php?id=${id}`)
     .then((response) => response.json())
     .then((data) => {
       if (data.error) {

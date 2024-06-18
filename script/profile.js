@@ -1,25 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
   const id = getCookie("id");
   console.log(id);
-  // Create the request body
 
-  const requestBody = {
-    id: id,
-  };
-
+  const requestBody = { id: id };
   const requestOptions = {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(requestBody),
   };
 
-  fetch("https://ashantilaundrysystem.muccs.host/api/queue/queue.php", requestOptions)
+  fetch("http://ashantilaundrysystem.muccs.host/api/queue/queue.php", requestOptions)
     .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      if (!response.ok) throw new Error("Network response was not ok");
       return response.json();
     })
     .then((data) => {
@@ -28,16 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Add queue number to each row
-      if (!Array.isArray(data)) {
-        // Wrap data in an array
-        data = [data];
-      }
-
-      // Now data is guaranteed to be an array
-      data.forEach((row, index) => {
-        row.queueNumber = index + 1;
-      });
+      if (!Array.isArray(data)) data = [data];
+      data.forEach((row, index) => (row.queueNumber = index + 1));
 
       const tableData = data.map((row) => [
         `#${row.queueNumber}`,
@@ -62,18 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
         'a[data-bs-target="#remove"]',
         function () {
           const logId = $(this).data("id");
-          // Set the log ID to the hidden input field in the delete form
           $('#deleteForm input[name="data_id"]').val(logId);
         }
       );
 
       $("#deleteForm").on("submit", function (event) {
-        // Prevent the default form submission behavior
         event.preventDefault();
-        // Get the log ID from the hidden input field
         const logId = $('#deleteForm input[name="data_id"]').val();
         removeLog(logId);
-        // Close the modal (if needed)
         $("#remove").modal("hide");
       });
 
@@ -84,8 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
           { title: "Customer" },
           { title: "Type" },
           { title: "Kilo kg/p" },
-          { title: "Status" },
           { title: "Total" },
+          { title: "Status" },
           { title: "Date Created" },
           { title: "Option" },
         ],
@@ -97,21 +77,18 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch((error) => console.error("Error:", error));
 
   const userID = getCookie("id");
-  var action = "profile";
+  const action = "profile";
 
-  FormData = {
-    id: userID,
-    action: action,
-  };
+  const formData = { id: userID, action: action };
 
   $.ajax({
-    url: "https://ashantilaundrysystem.muccs.host/api/file/",
+    url: "http://ashantilaundrysystem.muccs.host/api/file/",
     type: "POST",
-    data: FormData,
+    data: formData,
     success: function (data) {
       const data1 = JSON.parse(data);
-      var test = data1[0];
-
+      const test = data1[0];
+      console.log("user", test);
       const fullname = test.fullname || "";
       const [firstName, lastName] = fullname.split(" ");
 
@@ -121,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#UpContact").val(test.contact);
 
       const imageUrl = test.photo
-        ? "https://ashantilaundrysystem.muccs.host/img/customer/" + test.photo
+        ? "http://ashantilaundrysystem.muccs.host/img/customer/" + test.photo
         : "assets/img/profile.png";
 
       document.getElementById("profile-img").src = imageUrl;
@@ -134,14 +111,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("Update")
     .addEventListener("submit", function (event) {
-      event.preventDefault(); // Prevent the default form submission
+      event.preventDefault();
 
       const firstname = $("#Update input[name='firstname']").val();
       const lastname = $("#Update input[name='lastname']").val();
       const address = $("#Update input[name='address']").val();
       const contact = $("#Update input[name='contact']").val();
-      // Construct the query string
-      var queryString = {
+
+      const queryString = {
         id: userID,
         firstname: firstname,
         lastname: lastname,
@@ -151,10 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       $.ajax({
         method: "PUT",
-        url: "https://ashantilaundrysystem.muccs.host/api/file/",
-        headers: {
-          "Content-Type": "application/json",
-        }, // Set content type to JSON
+        url: "http://ashantilaundrysystem.muccs.host/api/file/",
+        headers: { "Content-Type": "application/json" },
         data: JSON.stringify(queryString),
         success: function (data) {
           Swal.fire({
@@ -202,17 +177,17 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("submit", function (e) {
       e.preventDefault();
 
-      var formData = $(this).serializeArray();
-      var userID = getCookie("id"); // Assuming you have a function to retrieve the user ID from cookies
+      const formData = $(this).serializeArray();
+      const userID = getCookie("id");
       formData.push({ name: "userID", value: userID });
 
       $.ajax({
-        url: "https://ashantilaundrysystem.muccs.host/api/file/",
+        url: "http://ashantilaundrysystem.muccs.host/api/file/",
         type: "POST",
         data: $.param(formData),
         success: function (response) {
           try {
-            var data = JSON.parse(response);
+            const data = JSON.parse(response);
             if (data.success) {
               Swal.fire({
                 title: "Success",
@@ -240,53 +215,53 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-  // Assuming you have a way to get the current user ID and type
-  const userId = getCookie("id"); // Replace this with actual logic
+  const userId = getCookie("id");
+  const levels = getCookie("level"); // Replace this with actual logic
   // Replace this with actual logic
 
   // Set user ID and type in the hidden form
-  $("#user-id").val(userId);
-  $("#type").val();
 
   // Click event for the pencil icon
   $("#edit-icon").on("click", function () {
     $("#uploadModal").modal("show");
+
+    $("#user-id").val(userId);
+    $("#level").val(levels);
   });
 
-  // Change event for the file input
+  $("#uploadPic").on("submit", function (e) {
+    e.preventDefault();
 
-  // document.getElementById("uploadPic").addEventListener("submit", function (e) {
-  //   e.preventDefault();
+    var formData = new FormData(this); // Create FormData from the form element
 
-  //   const formData = $(this);
-
-  //   $.ajax({
-  //     url: "https://ashantilaundrysystem.muccs.host/api/upload/", // Adjust this URL if needed
-  //     type: "POST",
-  //     data: formData,
-  //     processData: false,
-  //     contentType: false,
-  //     success: function (response) {
-  //       if (response.success) {
-  //         alert("Profile picture updated successfully!");
-  //         $("#uploadModal").modal("hide");
-  //       } else {
-  //         alert("Error: " + response.error);
-  //       }
-  //     },
-  //     error: function (xhr, status, error) {
-  //       console.error("Error:", error);
-  //       alert("An error occurred while uploading the image.");
-  //     },
-  //   });
-  // });
+    $.ajax({
+      url: "http://ashantilaundrysystem.muccs.host/api/uploads/uploads.php", // Adjust this URL if needed
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        if (response.success) {
+          alert("Profile picture updated successfully!");
+          $("#uploadModal").modal("hide");
+          location.reload();
+        } else {
+          alert("Error: " + response.error);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error:", error);
+        alert("An error occurred while uploading the image.");
+      },
+    });
+  });
 });
 
 function getCookie(name) {
-  let cookieArr = document.cookie.split(";");
+  const cookieArr = document.cookie.split(";");
   for (let i = 0; i < cookieArr.length; i++) {
-    let cookiePair = cookieArr[i].split("=");
-    if (name == cookiePair[0].trim()) {
+    const cookiePair = cookieArr[i].split("=");
+    if (name === cookiePair[0].trim()) {
       return decodeURIComponent(cookiePair[1]);
     }
   }
@@ -294,25 +269,19 @@ function getCookie(name) {
 }
 
 function removeLog(logId) {
-  fetch(`https://ashantilaundrysystem.muccs.host/api/file/`, {
+  fetch("http://ashantilaundrysystem.muccs.host/api/file/", {
     method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ data_id: logId }),
   })
     .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      if (!response.ok) throw new Error("Network response was not ok");
       return response.json();
     })
     .then((data) => {
       if (data.message) {
         console.log("Customer removed successfully");
-        // Optionally, reload the DataTable
 
-        
         Swal.fire({
           title: "Success",
           text: "You have successfully Deleted the Queue",
