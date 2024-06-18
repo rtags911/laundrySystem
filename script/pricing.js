@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Fetch user details if ID is available
   if (userID) {
-    fetch(`http://localhost/laundrySystem/api/file/?userID=${userID}`, {
+    fetch(`http://ashantilaundrysystem.muccs.host/api/file/?userID=${userID}`, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const serializedFormData = JSON.stringify(formObject);
       console.log(serializedFormData);
 
-      fetch("http://localhost/laundrySystem/api/file/", {
+      fetch("http://ashantilaundrysystem.muccs.host/api/file/", {
         method: "POST",
         body: formData,
       })
@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((data) => {
           if (data.success) {
             alert("Booking created successfully!");
+            location.reload();
             // Optionally, update the UI or navigate to a different page
           } else {
             alert("Failed to create booking: " + data.message);

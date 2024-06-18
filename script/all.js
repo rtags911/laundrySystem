@@ -4,12 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(this);
     formData.append("action", "login"); // Set action to 'login'
 
-    fetch("http://localhost/laundrySystem/api/file/", {
+    fetch("http://ashantilaundrysystem.muccs.host/api/file/", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
+
+         console.log("Response data:", data);
+
+         
         if (data.success) {
           const expirationTime = new Date(Date.now() + 20 * 60 * 1000); // 20 minutes from now
           document.cookie = `username=${
@@ -21,22 +25,24 @@ document.addEventListener("DOMContentLoaded", () => {
           document.cookie = `level=${
             data.level
           }; expires=${expirationTime.toUTCString()}; path=/`;
-          var level = getCookie("level");
+          var level = data.level;
+          console.log("test", level);
+          console.log("Type of level cookie:", typeof level);
 
           Swal.fire({
             title: "Success!",
             text: data.message,
             icon: "success",
-            confirmButtonText: "Ok",
           }).then((result) => {
-            if (result.isConfirmed) {
-              if (level != 2) {
-                window.location.href =
-                  "http://localhost/laundrySystem/admin/index.html";
-              } else {
-                window.location.reload();
-                $("#authModal").modal("hide");
-              }
+            if (level == 0) {
+              window.location.href =
+                "http://ashantilaundrysystem.muccs.host/admin/index.html";
+            } else if (level == 1) {
+              window.location.href =
+                "http://ashantilaundrysystem.muccs.host/staff/index.html";
+            } else {
+              window.location.reload();
+              $("#authModal").modal("hide");
             }
           });
         } else {
@@ -58,7 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const formData = new FormData(this);
       formData.append("action", "register"); // Set action to 'register'
 
-      fetch("http://localhost/laundrySystem/api/file/", {
+      console.log("form", formData);
+
+      fetch("http://ashantilaundrysystem.muccs.host/api/file/", {
         method: "POST",
         body: formData,
       })

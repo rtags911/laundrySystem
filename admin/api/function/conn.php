@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $host = 'localhost';
 $dbname = 'lms_db';
 $username = 'root';
@@ -13,9 +15,8 @@ try {
 
 function generate_logs($db, $type, $logs)
 {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
+
+
     $sql = "INSERT INTO logs (user_id, logs, type) VALUES (:user_id, :logs, :type)";
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':user_id', $_SESSION['id']);

@@ -19,7 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         book($db);
     } elseif ($action === 'profile') {
         profile($db);
+    } elseif ($action === 'admin') {
+        profileAD($db);
     }
+
+
 
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
     user($db);
@@ -27,6 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     updateProf($db);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     remove($db);
+}
+
+
+function profileAD($db)
+{
+    $id = $_POST['id'];
+    $sql = 'SELECT * FROM users WHERE id = :id ORDER BY username ASC';
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($results); // Return the profile data as JSON
 }
 
 
@@ -211,21 +227,25 @@ function login($db)
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            // Return user information
+            // Save user information to the session
+            $_SESSION['id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['level'] = $user['level'];
+
+            // Return user information as JSON response
             http_response_code(200);
-            echo json_encode(
-                array(
-                    "success" => true,
-                    "username" => $user['username'],
-                    "id" => $user['id'],
-                    "level" => $user['level'],
-                    "message" => "Login successful"
-                )
-            );
+            echo json_encode([
+                "success" => true,
+                "username" => $user['username'],
+                "id" => $user['id'],
+                "level" => $user['level'],
+                "message" => "Login successful"
+            ]);
+            generate_logs($db, 'Logging Admin', "{$_SESSION['username']} | Admin was logged in successfully");
         } else {
-            // Return error message
+            // Return error message for invalid credentials
             http_response_code(401);
-            echo json_encode(array("message" => "Wrong username or password"));
+            echo json_encode(["message" => "Wrong username or password"]);
         }
     }
 }

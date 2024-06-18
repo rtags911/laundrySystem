@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>DRYME - Free Laundry Service Website Template</title>
+    <title>DRYME </title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="Free HTML Templates" name="keywords" />
     <meta content="Free HTML Templates" name="description" />
@@ -97,12 +97,12 @@
             <div class="navbar-nav ml-auto py-0">
                 <a href="index.html" class="nav-item nav-link">Home</a>
               <a href="about.html" class="nav-item nav-link ">About</a>
-              <a href="service.html" class="nav-item nav-link  active">Services</a>
-              <a href="pricing.html" class="nav-item nav-link">Order</a>
+              <a href="service.html" class="nav-item nav-link  active">Order</a>
+              <a href="pricing.html" class="nav-item nav-link">Laundry</a>
             <a href="#" class="nav-item nav-link" data-toggle="modal" data-target="#authModal" id="signInLink" >Sign In</a>   
                          <div class="nav-item dropdown d-none" id="avatarDropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="placeholder1.jpg" alt="Avatar" class="rounded-circle" style="width: 30px; height: 30px;">
+            <img src="img/placeholder1.jpg" alt="Avatar" class="rounded-circle" style="width: 30px; height: 30px;">
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="profile.html" id="profileLink">Profile</a>
@@ -207,6 +207,136 @@
     </div>
     <!-- Services End -->
 
+
+    <!-- start -->
+<div class="container-fluid pt-5 pb-3">
+      <div class="container">
+        <h6
+          class="text-secondary text-uppercase text-center font-weight-medium mb-3"
+        >
+          Book Now
+        </h6>
+        <div class="row justify-content-center align-items-center">
+          <div class="col-md-6">
+            <div class="card shadow-sm">
+              <form id="bookingForm">
+                <input
+                  type="hidden"
+                  class="form-control"
+                  name="action"
+                  value="book"
+                  required
+                />
+                <div class="form-group">
+                  <label for="kilo">Kilo</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="kilo"
+                    name="kilo"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <p id="costDisplay">Cost: 0 PHP</p>
+                </div>
+                <div class="form-group">
+                  <label for="pickup_or_delivery">Pickup or Delivery</label>
+                  <select
+                    class="form-control"
+                    id="pickup_or_delivery"
+                    name="pickup_or_delivery"
+                    required
+                  >
+                    <option value="pickup">Pickup</option>
+                    <option value="delivery">Delivery</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="typeOfWash">Type of Wash</label>
+                  <select
+                    class="form-control"
+                    id="typeOfWash"
+                    name="typeOfWash"
+                    required
+                  >
+                    <option value="washFold">Wash and Fold</option>
+                    <option value="suitClean">Suit Clean</option>
+                    <option value="curtainClean">Curtain</option>
+                  </select>
+                </div>
+                <div class="form-check mb-3">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="useLoggedInDetails"
+                  />
+                  <label
+                    class="form-check-label"
+                    id="useLoggedInDetailsLabel"
+                    for="useLoggedInDetails"
+                    >Use my details</label
+                  >
+                </div>
+                <div class="form-group">
+                  <label for="contact">Contact Number</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="bookContact"
+                    name="contact"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="firstname">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="bookFirstname"
+                    name="firstname"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="lastname">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="bookLastname"
+                    name="lastname"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="address">Address</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="bookAddress"
+                    name="address"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                  Book Laundry
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="info-box">
+              <h5>Pricing Information</h5>
+              <p>
+                Any kilo of clothes within the range of 5 kilos will be 150 PHP.
+                Any additional kilo will be charged at 25 PHP per kilo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end -->
     <!-- Footer Start -->
     <div
       class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5"
@@ -298,11 +428,11 @@
                              <input type="hidden" name="action" value="register">
                             <div class="form-group">
                                 <label for="firstName">First Name</label>
-                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                <input type="text" class="form-control" id="firstName" name="first_name" required>
                             </div>
                             <div class="form-group">
                                 <label for="lastName">Last Name</label>
-                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                <input type="text" class="form-control" id="lastName" name="last_name" required>
                             </div>
                             <div class="form-group">
                                 <label for="registerUsername">Username</label>
@@ -349,7 +479,9 @@
  <script src="admin/assets/js/sweetAlert2@10.js"></script>
     <script src="script/all.js"></script>
     <script src="script/session_check.js"></script>
+     <script src="script/sessionCheck.js"></script>
     <!-- Template Javascript -->
+        <script src="script/pricing.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

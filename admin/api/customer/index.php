@@ -5,7 +5,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Credentials: true');
-
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     addCustomer($db);
@@ -61,7 +61,7 @@ function addCustomer($db)
     $stmt->execute();
 
     generate_logs($db, 'Adding Customer', "$fullname | New Customer was added");
-    echo json_encode(['message' => 'New customer was added successfully']);
+    echo json_encode(['success' => true, 'message' => 'New customer was added successfully']);
 }
 
 function removeCustomer($db)
@@ -78,7 +78,7 @@ function removeCustomer($db)
 
         if ($statement->execute()) {
             generate_logs($db, 'Removing Customer', "$id | Customer was removed");
-            echo json_encode(['message' => 'Customer removed successfully!']);
+            echo json_encode(['success' => true, 'message' => 'Customer removed successfully!']);
         } else {
             generate_logs($db, 'Removing Customer', 'Error occurred while removing customer');
             http_response_code(500);
@@ -104,6 +104,18 @@ function updateCustomer($db)
         $address = $data['address'];
         $contact = $data['contact'];
         $username = $data['username'];
+        $password = $data['password'];
+        $repassword = $data['repassword'];
+
+        if ($password != $repassword) {
+            http_response_code(400);
+            echo json_encode(['message' => "The two passwords do not match"]);
+            exit;
+        }
+
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+
 
         $sql = "SELECT * FROM customers WHERE username = :username AND id != :id";
         $stmt = $db->prepare($sql);
@@ -117,22 +129,23 @@ function updateCustomer($db)
             exit;
         }
 
-        $sql = "UPDATE customers SET fullname = :fullname, username = :username ,address = :address, contact = :contact WHERE id = :id";
+        $sql = "UPDATE customers SET fullname = :fullname, username = :username ,address = :address, contact = :contact, password=:password WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':fullname', $fullname);
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':address', $address);
         $stmt->bindParam(':contact', $contact);
+        $stmt->bindParam(':password', $passwordHash);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
 
         generate_logs($db, 'Updating Customer', "$fullname | Customer was updated");
-        echo json_encode(['message' => 'Customer was updated successfully']);
+        echo json_encode(["success" => true, "message" => "Customer was updated successfully"]);
 
 
     } else {
         http_response_code(400);
-        echo json_encode(['message' => 'Invalid data format']);
+        echo json_encode(["error" => "Error updating customer record: "]);
     }
 
 

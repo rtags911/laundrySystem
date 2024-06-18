@@ -9603,3 +9603,8 @@ h6,
             background-color: #f9f9f9;
             margin-top: 10px;
         }
+
+
+        .custom-select{
+          width: 200px;
+        }
