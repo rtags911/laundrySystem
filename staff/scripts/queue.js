@@ -15,15 +15,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const tableData = data.map((row) => {
         const isPending = row.status === 0;
         const isClaimed = row.status === 4;
+        const isCancelled = row.status === 5;
 
         // Determine if cancel button should be disabled
-        const cancelDisabled = !isPending || isClaimed;
+        const cancelDisabled = !isPending || isClaimed || isCancelled;
         const toggleModal = isPending ? "modal" : "";
 
         // Determine photo URL with fallback
         const photoUrl = row.photo
           ? `http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}`
-          : `http://ashantilaundrysystem.muccs.host/assets/profile.png`;
+          : `http://ashantilaundrysystem.muccs.host/assets/img/profile.png`;
 
         // Determine text color class
         const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
@@ -31,7 +32,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return [
           `#${row.queueNumber}`,
           `<img class="rounded-circle me-2" width="30" height="30" src="${photoUrl}">${row.name}`,
-          row.type,
+          // row.type,
+          `<select class="type-dropdown form-select" data-id="${row.id}">
+            <option value="washFold" ${
+              row.type === "washFold" ? "selected" : ""
+            }>Wash and Fold</option>
+            <option value="suitClean" ${
+              row.type === "suitClean" ? "selected" : ""
+            }>Suit Clean</option>
+            <option value="curtainClean" ${
+              row.type === "curtainClean" ? "selected" : ""
+            }>Curtain</option>
+            <option value="notAvailable" ${
+              row.type === "notAvailable" ? "selected" : ""
+            }>Not Available</option>
+          </select>`,
           row.kilo,
           `<select class="status-dropdown form-select" data-id="${row.id}" ${
             isClaimed ? "disabled" : ""
@@ -51,9 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         <option value="4" ${
                           row.status === 4 ? "selected" : ""
                         }>Claimed</option>
-                        <option value="5" ${
-                          row.status === 5 ? "selected" : ""
-                        }>Cancelled</option>
+                          <option value="5" ${
+                            row.status === 5 ? "selected" : ""
+                          }>Cancelled</option>
                     </select>`,
           `₱${row.total}`, // Adding PHP sign here
           row.created_at,
@@ -125,6 +140,34 @@ document.addEventListener("DOMContentLoaded", () => {
         $("#remove").modal("hide");
       });
 
+      table.on("change", ".type-dropdown", function () {
+        const id = $(this).data("id");
+        const newType = $(this).val(); // Convert to integer
+        const selectedOption = $(this).find("option:selected").text();
+
+        fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: id,
+            type: newType,
+            action: "type",
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Status updated successfully to " + selectedOption + "!");
+              location.reload();
+            } else {
+              alert("Failed to update status: " + data.message);
+            }
+          })
+          .catch((error) => console.error("Error updating status:", error));
+      });
+
       // Add event listener for status dropdown change
       table.on("change", ".status-dropdown", function () {
         const id = $(this).data("id");
@@ -169,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
-              alert("Status updated successfully to " + selectedOption + "!");
+              alert("Type updated successfully to " + selectedOption + "!");
               location.reload();
             } else {
               alert("Failed to update status: " + data.message);
@@ -205,7 +248,7 @@ function removeLog(logId) {
 
         Swal.fire({
           title: "Success",
-          text: "You have successfully Cancelled the Queue",
+          text: "You have successfully Deleted the Queue",
           icon: "success",
           confirmButtonText: "Ok",
         }).then((result) => {

@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
-              alert("Status updated successfully to " + selectedOption + "!");
+              alert("Type updated successfully to " + selectedOption + "!");
               location.reload();
             } else {
               alert("Failed to update status: " + data.message);
