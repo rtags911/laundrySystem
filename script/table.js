@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function operateFormatter(value, row, index) {
       // Ensure 'status' field exists in the row
       const cancelDisabled = row.status !== 0;
-      const textClass = cancelDisabled ? "text-secondary" : "text-danger";
+      const textClass = cancelDisabled ? "text-muted" : "text-danger";
 
       return `
     <a class="remove mx-1 text-decoration-none ${textClass} ${

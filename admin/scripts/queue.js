@@ -15,9 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const tableData = data.map((row) => {
         const isPending = row.status === 0;
         const isClaimed = row.status === 4;
+        const isCancelled = row.status === 5;
 
         // Determine if cancel button should be disabled
-        const cancelDisabled = !isPending || isClaimed;
+        const cancelDisabled = !isPending || isClaimed || isCancelled;
         const toggleModal = isPending ? "modal" : "";
 
         // Determine photo URL with fallback
@@ -51,6 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         <option value="4" ${
                           row.status === 4 ? "selected" : ""
                         }>Claimed</option>
+                          <option value="5" ${
+                            row.status === 5 ? "selected" : ""
+                          }>Cancelled</option>
                     </select>`,
           `₱${row.total}`, // Adding PHP sign here
           row.created_at,

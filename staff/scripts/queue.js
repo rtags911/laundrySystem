@@ -51,6 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         <option value="4" ${
                           row.status === 4 ? "selected" : ""
                         }>Claimed</option>
+                        <option value="5" ${
+                          row.status === 5 ? "selected" : ""
+                        }>Cancelled</option>
                     </select>`,
           `₱${row.total}`, // Adding PHP sign here
           row.created_at,
