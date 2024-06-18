@@ -89,15 +89,16 @@ document.addEventListener("DOMContentLoaded", () => {
     function operateFormatter(value, row, index) {
       // Ensure 'status' field exists in the row
       const cancelDisabled = row.status !== 0;
+      const textClass = cancelDisabled ? "text-secondary" : "text-danger";
 
       return `
-        <a class="remove mx-1 text-decoration-none text-danger ${
-          cancelDisabled ? "disabled" : ""
-        }" 
-           href="javascript:void(0)" 
-           data-id="${row.id}">
-          <i class="far fa-trash-alt text-danger" style="font-size: 20px;"></i> Cancel
-        </a>`;
+    <a class="remove mx-1 text-decoration-none ${textClass} ${
+        cancelDisabled ? "disabled" : ""
+      }" 
+       href="javascript:void(0)" 
+       data-id="${row.id}">
+      <i class="far fa-trash-alt ${textClass}" style="font-size: 20px;"></i> Cancel
+    </a>`;
     }
 
     $table.on("click", ".remove", function () {
