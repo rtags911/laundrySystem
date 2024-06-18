@@ -181,7 +181,7 @@ function book($db)
 
     // Prepare and execute the SQL query
     $sql = "INSERT INTO books (customer_id, transaction_id, kilo, total, pickup_or_delivery, type, contact, address, name, status, created_at, date_booked) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW() ? )";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW() ,? )";
     $stmt = $db->prepare($sql);
     $result = $stmt->execute([$customer_id, $laundry_id, $kilo, $cost, $pickup_or_delivery, $typeOfWash, $contact, $address, $name, $status, $date]);
 
