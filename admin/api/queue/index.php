@@ -54,15 +54,15 @@ function removeQueue($db)
     if ($input_data && isset($input_data['data_id'])) {
         $id = $input_data['data_id'];
 
-        $sql = "DELETE FROM books WHERE id = :id";
+        $sql = "UPDATE books SET status = 5  WHERE id = :id";
         $statement = $db->prepare($sql);
         $statement->bindParam(':id', $id);
 
         if ($statement->execute()) {
-            generate_logs($db, 'Removing Queue', "$id | Queue was removed");
-            echo json_encode(['message' => 'Queue removed successfully!']);
+            generate_logs($db, 'Cancelling Queue', "$id | Queue was Cancelled");
+            echo json_encode(['message' => ' Queue was Cancelled successfully!']);
         } else {
-            generate_logs($db, 'Removing Queue', 'Error occurred while removing Queue');
+            generate_logs($db, 'Removing Queue', 'Error occurred while cancelling queue');
             http_response_code(500);
             echo json_encode(['message' => 'Something went wrong!']);
         }

@@ -54,15 +54,15 @@ function remove($db)
     if ($input_data) {
         $id = $input_data['data_id'];
 
-        $sql = "DELETE FROM books WHERE id = :id";
+        $sql = "UPDATE books SET status = 5 WHERE id = :id";
         $statement = $db->prepare($sql);
         $statement->bindParam(':id', $id);
 
         if ($statement->execute()) {
-            generate_logs($db, 'Removing Queue', "$id | Queue was removed");
-            echo json_encode(['message' => 'Queue removed successfully!']);
+
+            echo json_encode(['message' => ' Queue was Cancelled successfully!']);
         } else {
-            generate_logs($db, 'Removing Queue', 'Error occurred while removing Queue');
+            generate_logs($db, 'Removing Queue', 'Error occurred while cancelling queue');
             http_response_code(500);
             echo json_encode(['message' => 'Something went wrong!']);
         }
@@ -163,6 +163,7 @@ function book($db)
     $address = $_POST['address'];
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
+    $date = $_POST['booked'];
 
     // Concatenate first name and last name
     $name = $firstname . ' ' . $lastname;
@@ -179,10 +180,10 @@ function book($db)
     $status = '0';
 
     // Prepare and execute the SQL query
-    $sql = "INSERT INTO books (customer_id, transaction_id, kilo, total, pickup_or_delivery, type, contact, address, name, status, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+    $sql = "INSERT INTO books (customer_id, transaction_id, kilo, total, pickup_or_delivery, type, contact, address, name, status, created_at, date_booked) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW() ? )";
     $stmt = $db->prepare($sql);
-    $result = $stmt->execute([$customer_id, $laundry_id, $kilo, $cost, $pickup_or_delivery, $typeOfWash, $contact, $address, $name, $status]);
+    $result = $stmt->execute([$customer_id, $laundry_id, $kilo, $cost, $pickup_or_delivery, $typeOfWash, $contact, $address, $name, $status, $date]);
 
     // Check if the query was successful
     if ($result) {

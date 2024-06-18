@@ -57,6 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
               title: "Date Created",
             },
             {
+              field: "date_booked",
+              title: "Date Booked",
+            },
+            {
               field: "operate",
               title: "Tools",
               formatter: operateFormatter,

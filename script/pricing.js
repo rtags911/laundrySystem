@@ -99,7 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((data) => {
           if (data.success) {
             alert("Booking created successfully!");
-            location.reload();
+            location.href =
+              "https://ashantilaundrysystem.muccs.host/pricing.html";
             // Optionally, update the UI or navigate to a different page
           } else {
             alert("Failed to create booking: " + data.message);

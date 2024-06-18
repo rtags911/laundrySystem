@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Determine photo URL with fallback
         const photoUrl = row.photo
           ? `http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}`
-          : `http://ashantilaundrysystem.muccs.host/img/placeholder1.jpg`;
+          : `http://ashantilaundrysystem.muccs.host/assets/profile.png`;
 
         // Determine text color class
         const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </select>`,
           `₱${row.total}`, // Adding PHP sign here
           row.created_at,
+          row.date_booked,
           `<a class="mx-1 text-decoration-none ${textColorClass} ${
             cancelDisabled ? "disabled" : ""
           }" href="#" 
@@ -81,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
           { title: "Status" },
           { title: "Total" },
           { title: "Date Created" },
+          { title: "Date Booked" },
           { title: "Option" },
         ],
         paging: true,

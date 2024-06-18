@@ -2,79 +2,79 @@ document.addEventListener("DOMContentLoaded", () => {
   const id = getCookie("id");
   console.log(id);
 
-  const requestBody = { id: id };
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(requestBody),
-  };
+  // const requestBody = { id: id };
+  // const requestOptions = {
+  //   method: "POST",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify(requestBody),
+  // };
 
-  fetch("http://ashantilaundrysystem.muccs.host/api/queue/queue.php", requestOptions)
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
-    .then((data) => {
-      if (data.error) {
-        console.error(data.error);
-        return;
-      }
+  // fetch("http://ashantilaundrysystem.muccs.host/api/queue/queue.php", requestOptions)
+  //   .then((response) => {
+  //     if (!response.ok) throw new Error("Network response was not ok");
+  //     return response.json();
+  //   })
+  //   .then((data) => {
+  //     if (data.error) {
+  //       console.error(data.error);
+  //       return;
+  //     }
 
-      if (!Array.isArray(data)) data = [data];
-      data.forEach((row, index) => (row.queueNumber = index + 1));
+  //     if (!Array.isArray(data)) data = [data];
+  //     data.forEach((row, index) => (row.queueNumber = index + 1));
 
-      const tableData = data.map((row) => [
-        `#${row.queueNumber}`,
-        `<img class="rounded-circle me-2" width="30" height="30" src="assets/img/profile.png">${row.name}`,
-        row.type,
-        row.kilo,
-        row.total,
-        row.status_text,
-        row.created_at,
-        `<a class="mx-1 text-decoration-none text-danger" href="#" data-bs-target="#remove" data-id="${row.id}" data-bs-toggle="modal">
-          <i class="far fa-trash-alt text-danger" style="font-size: 20px;"></i> Remove</a>`,
-      ]);
+  //     const tableData = data.map((row) => [
+  //       `#${row.queueNumber}`,
+  //       `<img class="rounded-circle me-2" width="30" height="30" src="assets/img/profile.png">${row.name}`,
+  //       row.type,
+  //       row.kilo,
+  //       row.total,
+  //       row.status_text,
+  //       row.created_at,
+  //       `<a class="mx-1 text-decoration-none text-danger" href="#" data-bs-target="#remove" data-id="${row.id}" data-bs-toggle="modal">
+  //         <i class="far fa-trash-alt text-danger" style="font-size: 20px;"></i> Remove</a>`,
+  //     ]);
 
-      const table = $("#dataTable");
+  //     const table = $("#dataTable");
 
-      if ($.fn.dataTable.isDataTable(table)) {
-        table.DataTable().clear().destroy();
-      }
+  //     if ($.fn.dataTable.isDataTable(table)) {
+  //       table.DataTable().clear().destroy();
+  //     }
 
-      $("#dataTable tbody").on(
-        "click",
-        'a[data-bs-target="#remove"]',
-        function () {
-          const logId = $(this).data("id");
-          $('#deleteForm input[name="data_id"]').val(logId);
-        }
-      );
+  //     $("#dataTable tbody").on(
+  //       "click",
+  //       'a[data-bs-target="#remove"]',
+  //       function () {
+  //         const logId = $(this).data("id");
+  //         $('#deleteForm input[name="data_id"]').val(logId);
+  //       }
+  //     );
 
-      $("#deleteForm").on("submit", function (event) {
-        event.preventDefault();
-        const logId = $('#deleteForm input[name="data_id"]').val();
-        removeLog(logId);
-        $("#remove").modal("hide");
-      });
+  //     $("#deleteForm").on("submit", function (event) {
+  //       event.preventDefault();
+  //       const logId = $('#deleteForm input[name="data_id"]').val();
+  //       removeLog(logId);
+  //       $("#remove").modal("hide");
+  //     });
 
-      table.DataTable({
-        data: tableData,
-        columns: [
-          { title: "Queue" },
-          { title: "Customer" },
-          { title: "Type" },
-          { title: "Kilo kg/p" },
-          { title: "Total" },
-          { title: "Status" },
-          { title: "Date Created" },
-          { title: "Option" },
-        ],
-        paging: true,
-        searching: true,
-        info: true,
-      });
-    })
-    .catch((error) => console.error("Error:", error));
+  //     table.DataTable({
+  //       data: tableData,
+  //       columns: [
+  //         { title: "Queue" },
+  //         { title: "Customer" },
+  //         { title: "Type" },
+  //         { title: "Kilo kg/p" },
+  //         { title: "Total" },
+  //         { title: "Status" },
+  //         { title: "Date Created" },
+  //         { title: "Option" },
+  //       ],
+  //       paging: true,
+  //       searching: true,
+  //       info: true,
+  //     });
+  //   })
+  //   .catch((error) => console.error("Error:", error));
 
   const userID = getCookie("id");
   const action = "profile";

@@ -318,6 +318,16 @@
                     required
                   />
                 </div>
+                <div class="form-group">
+                  <label for="bookedDate">Booked Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="bookedDate"
+                    name="booked"
+                    required
+                  />
+                </div>
                 <button type="submit" class="btn btn-primary btn-block">
                   Book Laundry
                 </button>
@@ -483,5 +493,11 @@
     <!-- Template Javascript -->
         <script src="script/pricing.js"></script>
     <script src="js/main.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById("bookedDate").setAttribute("min", today);
+  });
+  </script>
   </body>
 </html>

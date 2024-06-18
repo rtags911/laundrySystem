@@ -19,6 +19,7 @@ $statusMappings = [
     2 => 'Folding',
     3 => 'Ready for Pickup',
     4 => 'Claimed',
+    5 => 'cancelled',
     // Add more mappings as needed
 ];
 
