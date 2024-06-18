@@ -10,10 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("Response data:", data);
 
-         console.log("Response data:", data);
-
-         
         if (data.success) {
           const expirationTime = new Date(Date.now() + 20 * 60 * 1000); // 20 minutes from now
           document.cookie = `username=${

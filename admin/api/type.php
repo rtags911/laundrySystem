@@ -23,8 +23,8 @@ try {
 
     // Iterate over the results and add status text based on status code
     foreach ($results as &$result) {
-        if (isset($result['status_code'])) {
-            $result['status_text'] = $statusMap[$result['status_code']] ?? 'Unknown';
+        if (isset($result['status_type'])) {
+            $result['status_text'] = $statusMap[$result['status_type']] ?? 'Unknown';
         }
     }
 
