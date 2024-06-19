@@ -113,9 +113,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function drop(value, row, index) {
-      const isClaimed = row.status === 4;
+      const isClaimedOrCancelled = row.status === 4 || row.status === 5;
       return `<select class="status-dropdown form-select" data-id="${row.id}" ${
-        isClaimed ? "disabled" : ""
+        isClaimedOrCancelled ? "disabled" : ""
       }>
                   <option value="0" ${
                     row.status === 0 ? "selected" : ""
@@ -148,9 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     $table.on("click", 'a[data-bs-target="#remove"]', function (event) {
       const logId = $(this).data("id");
-      const status = data.find((row) => row.id === logId)?.status;
-
-      if (![0].includes(status)) {
+      const currentStatus = $table
+        .bootstrapTable("getData")
+        .find((row) => row.id === logId)?.status;
+      if (![0].includes(currentStatus)) {
         event.preventDefault();
         $("#remove").modal("hide");
         alert("Cannot cancel for statuses other than 'Pending'.");
@@ -168,24 +169,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     $table.on("change", ".status-dropdown", function () {
       const id = $(this).data("id");
-      const newStatus = parseInt($(this).val()); // Convert to integer
+      const newStatus = parseInt($(this).val());
       const selectedOption = $(this).find("option:selected").text();
+      const currentStatus = $table
+        .bootstrapTable("getData")
+        .find((row) => row.id === id)?.status;
 
-      // Determine current status
-      const currentStatus = data.find((row) => row.id === id)?.status;
-
-      // Define allowed status transitions
       const allowedTransitions = {
-        0: [1], // Pending can transition to Processing
-        1: [2], // Processing can transition to Folding
-        2: [3], // Folding can transition to Ready for Pickup
-        3: [], // Ready for Pickup cannot transition to any other status
-        4: [], // Claimed cannot transition to any other status
+        0: [1],
+        1: [2],
+        2: [3],
+        3: [],
+        4: [],
       };
 
-      // Check if the selected newStatus is allowed for the current status
       if (!allowedTransitions[currentStatus].includes(newStatus)) {
-        // Revert back to the current status in dropdown
         $(this).val(currentStatus);
         alert(
           `Cannot transition from "${getStatusText(
@@ -209,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            alert("Type updated successfully to " + selectedOption + "!");
+            alert("Status updated successfully to " + selectedOption + "!");
             location.reload();
           } else {
             alert("Failed to update status: " + data.message);
