@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   document
-    .getElementById("addCustomer")
+    .getElementById("addType")
     .addEventListener("submit", function (event) {
       event.preventDefault(); // Prevent form submission
 
