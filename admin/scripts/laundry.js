@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
           }>
                         <option value="0" ${
                           row.status_type === 0 ? "selected" : ""
-                        }>Available</option>
+                        }>Not Available</option>
                         <option value="1" ${
                           row.status_type === 1 ? "selected" : ""
-                        }>Not Available</option>
+                        }>Available</option>
                     </select>`,
           `<a class="mx-1 text-decoration-none text-danger " href="#" 
                         data-id="${row.id}" 
@@ -78,8 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Add event listener for status dropdown change
       table.on("change", ".status-dropdown", function () {
         const id = $(this).data("id");
-        const newStatus = parseInt($(this).val()); // Convert to integer
+        const newStatus = $(this).val(); // Convert to integer
         const selectedOption = $(this).find("option:selected").text();
+        console.log("option" + selectedOption + " " + "Selected "+ newStatus );
 
         fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
           method: "POST",
@@ -95,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
+              console.log(data);
               alert("Type updated successfully to " + selectedOption + "!");
               location.reload();
             } else {
@@ -114,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault(); // Prevent form submission
 
       const formData = new FormData(this);
-      formData.append("action","add");
+      formData.append("action", "add");
       fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
         method: "POST",
         body: formData,

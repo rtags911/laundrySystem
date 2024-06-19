@@ -81,27 +81,7 @@ function statusUp($db, $data)
         echo json_encode(array("success" => false, "message" => "Invalid input"));
     }
 }
-function typeUp($db, $data)
-{
-    if (isset($data['id']) && isset($data['type'])) {
-        $id = $data['id'];
-        $type = $data['type'];
 
-        // Prepare the SQL statement
-        $sql = "UPDATE books SET type = ? WHERE id = ?";
-        $stmt = $db->prepare($sql);
-        $result = $stmt->execute([$type, $id]);
-
-        // Check if the update was successful
-        if ($result) {
-            echo json_encode(array("success" => true, "message" => "Type updated successfully"));
-        } else {
-            echo json_encode(array("success" => false, "message" => "Failed to update Type"));
-        }
-    } else {
-        echo json_encode(array("success" => false, "message" => "Invalid input"));
-    }
-}
 function TypeStatus($db, $data)
 {
     if (isset($data['id']) && isset($data['stat'])) {
@@ -109,7 +89,7 @@ function TypeStatus($db, $data)
         $type = $data['stat'];
 
         // Prepare the SQL statement
-        $sql = "UPDATE type_laundry SET status_type = ? WHERE id = ?";
+        $sql = "UPDATE type_laundry SET status_type = '$type' WHERE id = '$id'";
         $stmt = $db->prepare($sql);
         $result = $stmt->execute([$type, $id]);
 
