@@ -91,14 +91,16 @@ document.addEventListener("DOMContentLoaded", () => {
             .attr("value", item.type_name.toLowerCase())
             .text(item.type_name);
 
-          // Disable the option if status_type is '0'
-          if (item.status_type === "0") {
-            option.prop("disabled", true);
-          }
-
-          // Set 'Not Available' as selected option on the far right
-          if (item.type_name.toLowerCase() === "not available") {
-            option.prop("selected", true);
+          // Check if status_type is '0' or type_name is 'Not Available'
+          if (
+            item.status_type === "0" ||
+            item.type_name.toLowerCase() === "not available"
+          ) {
+            // Add 'Not Available' in italic next to the option text
+            option.html(
+              item.type_name +
+                '<span style="font-style: italic; margin-left: 5px;">Not Available</span>'
+            );
           }
 
           // Append the option to the select element
@@ -111,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     });
   });
+
 
   document
     .getElementById("bookingForm")
