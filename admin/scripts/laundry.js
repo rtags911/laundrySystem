@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault(); // Prevent form submission
 
       const formData = new FormData(this);
-
+      formData.append("action","add");
       fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
         method: "POST",
         body: formData,

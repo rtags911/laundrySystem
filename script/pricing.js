@@ -74,49 +74,43 @@ document.addEventListener("DOMContentLoaded", () => {
     costDisplay.innerText = `Cost: ${cost} PHP`;
   });
 
+  $(document).ready(function () {
+    // AJAX request to fetch data from PHP script
+    $.ajax({
+      url: "http://ashantilaundrysystem.muccs.host/admin/api/type.php",
+      type: "GET", // Use GET method to fetch data
+      dataType: "json", // Expect JSON data in response
+      success: function (data) {
+        // Clear any existing options in the select dropdown
+        $("#typeOfWash").empty();
 
+        // Iterate over each item in the data array and populate options
+        $.each(data, function (index, item) {
+          // Create an option element
+          var option = $("<option></option>")
+            .attr("value", item.type_name.toLowerCase())
+            .text(item.type_name);
 
+          // Disable the option if status_type is '0'
+          if (item.status_type === "0") {
+            option.prop("disabled", true);
+          }
 
-$(document).ready(function () {
-  // AJAX request to fetch data from PHP script
-  $.ajax({
-    url: "http://ashantilaundrysystem.muccs.host/admin/api/type.php",
-    type: "GET", // Use GET method to fetch data
-    dataType: "json", // Expect JSON data in response
-    success: function (data) {
-      // Clear any existing options in the select dropdown
-      $("#typeOfWash").empty();
+          // Set 'Not Available' as selected option on the far right
+          if (item.type_name.toLowerCase() === "not available") {
+            option.prop("selected", true);
+          }
 
-      // Iterate over each item in the data array and populate options
-      $.each(data, function (index, item) {
-        // Create an option element
-        var option = $("<option></option>")
-          .attr("value", item.type_name.toLowerCase())
-          .text(item.type_name);
-
-        // Disable the option if status_type is '0'
-        if (item.status_type === "0") {
-          option.prop("disabled", true);
-        }
-
-        // Set 'Not Available' as selected option on the far right
-        if (item.type_name.toLowerCase() === "not available") {
-          option.prop("selected", true);
-        }
-
-        // Append the option to the select element
-        $("#typeOfWash").append(option);
-      });
-    },
-    error: function (xhr, status, error) {
-      console.error("AJAX error:", error);
-      // Handle error appropriately (e.g., show error message)
-    },
+          // Append the option to the select element
+          $("#typeOfWash").append(option);
+        });
+      },
+      error: function (xhr, status, error) {
+        console.error("AJAX error:", error);
+        // Handle error appropriately (e.g., show error message)
+      },
+    });
   });
-});
-
-
-
 
   document
     .getElementById("bookingForm")
