@@ -86,21 +86,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Iterate over each item in the data array and populate options
         $.each(data, function (index, item) {
-          // Create an option element
-          var option = $("<option></option>")
-            .attr("value", item.type_name.toLowerCase())
-            .text(item.type_name);
+          // Create text for the option
+          var optionText = item.type_name;
 
-          // Check if status_type is '0' or type_name is 'Not Available'
-          if (
-            item.status_type === "0" ||
-            item.type_name.toLowerCase() === "not available"
-          ) {
-            // Add 'Not Available' in italic next to the option text
-            option.html(
-              item.type_name +
-                '<span style="font-style: italic; margin-left: 5px;">Not Available</span>'
-            );
+          // Add "Not Available" text and disable the option for items with status_type === "0"
+          if (item.status_type === "0") {
+            optionText += " - Not Available";
+            var option = $("<option></option>")
+              .attr("value", item.type_name.toLowerCase())
+              .text(optionText)
+              .prop("disabled", true); // Disable the option
+          } else {
+            var option = $("<option></option>")
+              .attr("value", item.type_name.toLowerCase())
+              .text(optionText);
           }
 
           // Append the option to the select element
@@ -113,7 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     });
   });
-
 
   document
     .getElementById("bookingForm")
