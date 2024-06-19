@@ -230,3 +230,5 @@ function getImageSrc(role, photo) {
     return "http://ashantilaundrysystem.muccs.host/assets/img/profile.png"; // Default image path if role is neither 'staff' nor 'admin'
   }
 }
+
+

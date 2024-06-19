@@ -14,7 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const tableData = data.map((row) => {
         return [
           `#${row.queueNumber}`,
-          `<img class="rounded-circle me-2" width="30" height="30" src="http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}">${row.name}`,
+          `<img class="rounded-circle me-2" width="30" height="30" src="${getImageSrc(
+            row.customer_photo
+          )}">${row.name}`,
           row.kilo,
           row.status_text,
           row.created_at,
@@ -74,3 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error:", error);
     });
 });
+
+function getImageSrc(photo) {
+  if (photo) {
+    return `http://ashantilaundrysystem.muccs.host/assets/img/customer/${photo}`;
+  } else {
+    return "http://ashantilaundrysystem.muccs.host/assets/img/profile.png"; // Default image path
+  }
+}

@@ -14,7 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const [firstName, lastName] = fullname.split(" ");
         return [
           row.id,
-        `<img class="rounded-circle me-2" width="30" height="30" src="http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}">${row.fullname}`,
+          `<img class="rounded-circle me-2" width="30" height="30" src="${getImageSrc(
+            row.customer_photo
+          )}">${row.fullname}`,
           row.username,
           row.address,
           row.contact,
@@ -110,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((data) => {
           if (data.success) {
             // Reload the DataTable on successful addition
-         
+
             Swal.fire({
               title: "Success",
               text: data.message,
@@ -170,7 +172,6 @@ document.addEventListener("DOMContentLoaded", function () {
         success: function (data) {
           if (data.success) {
             // Reload the DataTable on successful update
-        
 
             Swal.fire({
               title: "Success",
@@ -220,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         if (data.success) {
           // Reload the DataTable on successful deletion
-       
+
           Swal.fire({
             title: "Success",
             text: data.message,
@@ -252,4 +253,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+function getImageSrc(photo) {
+  if (photo) {
+    return `http://ashantilaundrysystem.muccs.host/assets/img/customer/${photo}`;
+  } else {
+    return "http://ashantilaundrysystem.muccs.host/assets/img/profile.png"; // Default image path
+  }
+}
 
