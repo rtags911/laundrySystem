@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
   var user = getCookie("level");
 
   if (user == "0") {
-    window.location.href = "https://ashantilaundrysystem.muccs.host/admin/index.html";
+    window.location.href = "http://ashantilaundrysystem.muccs.host/admin/index.html";
   }
   if (user == "1") {
-    window.location.href = "https://ashantilaundrysystem.muccs.host/staff/index.html";
+    window.location.href = "http://ashantilaundrysystem.muccs.host/staff/index.html";
   }
 });

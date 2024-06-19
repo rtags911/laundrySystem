@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Fetch user details if ID is available
   if (userID) {
-    fetch(`https://ashantilaundrysystem.muccs.host/api/file/?userID=${userID}`, {
+    fetch(`http://ashantilaundrysystem.muccs.host/api/file/?userID=${userID}`, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -77,33 +77,73 @@ document.addEventListener("DOMContentLoaded", () => {
   $(document).ready(function () {
     // AJAX request to fetch data from PHP script
     $.ajax({
-      url: "https://ashantilaundrysystem.muccs.host/admin/api/type.php",
+      url: "http://ashantilaundrysystem.muccs.host/admin/api/type.php",
       type: "GET", // Use GET method to fetch data
       dataType: "json", // Expect JSON data in response
-      success: function (data) {
-        // Clear any existing options in the select dropdown
-        $("#typeOfWash").empty();
+      success: function (type) {
+        const userID = getCookie("id");
+        const tester = new FormData();
+        tester.append("id", userID);
 
-        // Iterate over each item in the data array and populate options
-        $.each(data, function (index, item) {
-          // Create text for the option
-          var optionText = item.type_name;
+        $.ajax({
+          url: "http://ashantilaundrysystem.muccs.host/api/post/post1.php", // Correct path to your PHP script
+          type: "POST",
+          processData: false,
+          contentType: false,
+          data: tester,
+          success: function (data) {
+            console.log("AJAX success data:", data); // Log the data for debugging
 
-          // Add "Not Available" text and disable the option for items with status_type === "0"
-          if (item.status_type === "0") {
-            optionText += " - Not Available";
-            var option = $("<option></option>")
-              .attr("value", item.type_name.toLowerCase())
-              .text(optionText)
-              .prop("disabled", true); // Disable the option
-          } else {
-            var option = $("<option></option>")
-              .attr("value", item.type_name.toLowerCase())
-              .text(optionText);
-          }
+            $("#typeOfWash").empty();
 
-          // Append the option to the select element
-          $("#typeOfWash").append(option);
+            $.each(type, function (index, item) {
+              // Create text for the option
+              var optionText = item.type_name;
+
+              // Determine if the option should be disabled or marked as processing
+              var disabled = false;
+              var processing = false;
+
+              // Check the conditions in the nested data
+              $.each(data, function (dataIndex, dataItem) {
+                if (
+                  dataItem.status == 0 &&
+                  dataItem.type.toLowerCase() === item.type_name.toLowerCase()
+                ) {
+                  if (item.status_type === "0") {
+                    disabled = true;
+                  } else {
+                    processing = true;
+                  }
+                }
+              });
+
+              // Set the option text and attributes based on the conditions
+              if (disabled) {
+                optionText += " - Not Available";
+                var option = $("<option></option>")
+                  .attr("value", item.type_name.toLowerCase())
+                  .text(optionText)
+                  .prop("disabled", true); // Disable the option
+              } else if (processing) {
+                optionText += " - Processing";
+                var option = $("<option></option>")
+                  .attr("value", item.type_name.toLowerCase())
+                  .text(optionText)
+                  .prop("disabled", true); // Disable the option
+              } else {
+                var option = $("<option></option>")
+                  .attr("value", item.type_name.toLowerCase())
+                  .text(optionText);
+              }
+
+              // Append the option to the select element
+              $("#typeOfWash").append(option);
+            });
+          },
+          error: function (xhr, status, error) {
+            console.error("AJAX error:", error);
+          },
         });
       },
       error: function (xhr, status, error) {
@@ -130,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const serializedFormData = JSON.stringify(formObject);
       console.log(serializedFormData);
 
-      fetch("https://ashantilaundrysystem.muccs.host/api/file/", {
+      fetch("http://ashantilaundrysystem.muccs.host/api/file/", {
         method: "POST",
         body: formData,
       })
@@ -138,8 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((data) => {
           if (data.success) {
             alert("Booking created successfully!");
-            location.href =
-              "https://ashantilaundrysystem.muccs.host/pricing.html";
+            location.href = "http://ashantilaundrysystem.muccs.host/pricing.html";
             // Optionally, update the UI or navigate to a different page
           } else {
             alert("Failed to create booking: " + data.message);

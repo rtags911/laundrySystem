@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //   body: JSON.stringify(requestBody),
   // };
 
-  // fetch("https://ashantilaundrysystem.muccs.host/api/queue/queue.php", requestOptions)
+  // fetch("http://ashantilaundrysystem.muccs.host/api/queue/queue.php", requestOptions)
   //   .then((response) => {
   //     if (!response.ok) throw new Error("Network response was not ok");
   //     return response.json();
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const formData = { id: userID, action: action };
 
   $.ajax({
-    url: "https://ashantilaundrysystem.muccs.host/api/file/",
+    url: "http://ashantilaundrysystem.muccs.host/api/file/",
     type: "POST",
     data: formData,
     success: function (data) {
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $("#UpContact").val(test.contact);
 
       const imageUrl = test.photo
-        ? "https://ashantilaundrysystem.muccs.host/img/customer/" + test.photo
+        ? "http://ashantilaundrysystem.muccs.host/img/customer/" + test.photo
         : "assets/img/profile.png";
 
       document.getElementById("profile-img").src = imageUrl;
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       $.ajax({
         method: "PUT",
-        url: "https://ashantilaundrysystem.muccs.host/api/file/",
+        url: "http://ashantilaundrysystem.muccs.host/api/file/",
         headers: { "Content-Type": "application/json" },
         data: JSON.stringify(queryString),
         success: function (data) {
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.push({ name: "userID", value: userID });
 
       $.ajax({
-        url: "https://ashantilaundrysystem.muccs.host/api/file/",
+        url: "http://ashantilaundrysystem.muccs.host/api/file/",
         type: "POST",
         data: $.param(formData),
         success: function (response) {
@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var formData = new FormData(this); // Create FormData from the form element
 
     $.ajax({
-      url: "https://ashantilaundrysystem.muccs.host/api/uploads/uploads.php", // Adjust this URL if needed
+      url: "http://ashantilaundrysystem.muccs.host/api/uploads/uploads.php", // Adjust this URL if needed
       type: "POST",
       data: formData,
       processData: false,
@@ -269,7 +269,7 @@ function getCookie(name) {
 }
 
 function removeLog(logId) {
-  fetch("https://ashantilaundrysystem.muccs.host/api/file/", {
+  fetch("http://ashantilaundrysystem.muccs.host/api/file/", {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ data_id: logId }),

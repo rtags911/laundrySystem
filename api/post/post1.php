@@ -42,8 +42,24 @@ $statusMappings = [
     2 => 'Folding',
     3 => 'Ready for Pickup',
     4 => 'Claimed',
+    5 => 'Cancelled',
     // Add more mappings as needed
 ];
+
+// Iterate over the results and add status text based on status code
+function customStatusSort($a, $b)
+{
+    $statusOrder = [0, 1, 2, 3, 4, 5]; // Define the order of statuses
+    $statusOrderMap = array_flip($statusOrder); // Create a mapping of status to its order
+
+    $aOrder = isset($statusOrderMap[$a['status']]) ? $statusOrderMap[$a['status']] : PHP_INT_MAX;
+    $bOrder = isset($statusOrderMap[$b['status']]) ? $statusOrderMap[$b['status']] : PHP_INT_MAX;
+
+    return $aOrder - $bOrder;
+}
+
+// Sort results by custom status order
+usort($results, 'customStatusSort');
 
 // Iterate over the results and add status text based on status code
 foreach ($results as &$row) {
@@ -53,4 +69,5 @@ foreach ($results as &$row) {
 
 // Output JSON-encoded results as an array, even if there is only one result
 echo json_encode($results);
+
 ?>

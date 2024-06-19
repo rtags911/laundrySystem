@@ -2,10 +2,11 @@
 include_once '../api/function/conn.php';
 
 // SQL query to fetch data from books table joined with customers table
-$sql = 'SELECT b.*, c.photo AS customer_photo 
-        FROM books b
-        LEFT JOIN customers c ON b.customer_id = c.id
-        ORDER BY b.created_at DESC';
+$sql = 'SELECT b.*, c.photo AS customer_photo
+FROM books b
+LEFT JOIN customers c ON b.customer_id = c.id
+ORDER BY FIELD(b.status, 0, 1, 2, 3, 4, 5), b.created_at DESC
+';
 
 // Prepare and execute the SQL query
 $stmt = $db->prepare($sql);

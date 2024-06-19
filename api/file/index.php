@@ -82,22 +82,43 @@ function updateProf($db)
     $data = json_decode($json, true);
 
     if ($data) {
+        $action = $data['action'];
 
-        $id = $data['id'];
-        $fullname = strtoupper($data['firstname'] . ' ' . $data['lastname']);
-        $address = $data['address'];
-        $contact = $data['contact'];
-
-        $sql = "UPDATE customers SET fullname = :fullname,address = :address, contact = :contact WHERE id = :id";
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':fullname', $fullname);
-        $stmt->bindParam(':address', $address);
-        $stmt->bindParam(':contact', $contact);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
+        if ($action == 'service') {
+            $id = $data['id'];
+            $kilo = $data['kilo'];
+            $total = $data['total'];
 
 
-        echo json_encode(['success' => true, 'message' => 'Customer was updated successfully']);
+            $sql = "UPDATE books SET kilo = :kilo, total = :total WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':kilo', $kilo);
+            $stmt->bindParam(':total', $total);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
+
+            echo json_encode(['success' => true, 'message' => 'Kilo was updated successfully']);
+
+        } else {
+
+            $id = $data['id'];
+            $fullname = strtoupper($data['firstname'] . ' ' . $data['lastname']);
+            $address = $data['address'];
+            $contact = $data['contact'];
+
+            $sql = "UPDATE customers SET fullname = :fullname,address = :address, contact = :contact WHERE id = :id";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':fullname', $fullname);
+            $stmt->bindParam(':address', $address);
+            $stmt->bindParam(':contact', $contact);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
+
+            echo json_encode(['success' => true, 'message' => 'Customer was updated successfully']);
+
+        }
 
 
     } else {
