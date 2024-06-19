@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         data-id="${row.id}" 
                         data-bs-toggle="modal" 
                         data-bs-target="#remove">
-                        <i class="far fa-trash-alt" style="font-size: 20px;"></i> Cancel
+                        <i class="far fa-trash-alt" style="font-size: 20px;"></i> Remove
                     </a>`,
         ];
       });
