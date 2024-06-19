@@ -21,13 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($data['action'])) {
         $action = $data['action'];
 
-        if ($action == "type") {
-            typeUp($db, $data);
-        }
-    }
-    if (isset($data['action'])) {
-        $action = $data['action'];
-
         if ($action == "typeStatus") {
             TypeStatus($db, $data);
         }
@@ -45,17 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
-    if (isset($data['action'])) {
-        $action = $data['action'];
-
-        if ($action == "laundry") {
-            delete($db);
-        }
-    } else {
-        removeQueue($db);
-    }
-
-
+    removeQueue($db);
 
 
 }
@@ -89,9 +72,15 @@ function TypeStatus($db, $data)
         $type = $data['stat'];
 
         // Prepare the SQL statement
-        $sql = "UPDATE type_laundry SET status_type = '$type' WHERE id = '$id'";
+        $sql = "UPDATE type_laundry SET status_type = :type WHERE id = :id";
         $stmt = $db->prepare($sql);
-        $result = $stmt->execute([$type, $id]);
+
+        // Bind parameters
+        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        // Execute the SQL statement
+        $result = $stmt->execute();
 
         // Check if the update was successful
         if ($result) {
@@ -103,6 +92,8 @@ function TypeStatus($db, $data)
         echo json_encode(array("success" => false, "message" => "Invalid input"));
     }
 }
+
+
 function addStatus($db, $data)
 {
     if (isset($data['laundry']) && !empty($data['laundry'])) {
@@ -118,9 +109,9 @@ function addStatus($db, $data)
 
             // Check if the insert was successful
             if ($result) {
-                echo json_encode(array("success" => true, "message" => "Status updated successfully"));
+                echo json_encode(array("success" => true, "message" => "Laundry type added successfully"));
             } else {
-                echo json_encode(array("success" => false, "message" => "Failed to update Status"));
+                echo json_encode(array("success" => false, "message" => "Failed to add laundry type"));
             }
         } catch (PDOException $e) {
             // Handle PDO exceptions
@@ -137,60 +128,51 @@ function removeQueue($db)
     // Check if JSON decoding was successful and if 'data_id' exists
     if ($input_data && isset($input_data['data_id'])) {
         $id = $input_data['data_id'];
+        $action = $input_data['action'];
+        if ($action == 'laundry') {
+            $id = $input_data['data_id'];
 
-        $sql = "UPDATE books SET status = 5  WHERE id = :id";
-        $statement = $db->prepare($sql);
-        $statement->bindParam(':id', $id);
+            try {
+                // Correct SQL statement
+                $sql = "DELETE FROM `type_laundry` WHERE id = :id";
+                $statement = $db->prepare($sql);
+                $statement->bindParam(':id', $id, PDO::PARAM_INT);
 
-        if ($statement->execute()) {
-            generate_logs($db, 'Cancelling Queue', "$id | Queue was Cancelled");
-            echo json_encode(['message' => ' Queue was Cancelled successfully!']);
+                if ($statement->execute()) {
+                    // Ensure generate_logs function exists
+                    generate_logs($db, 'Laundry Type', "$id | Type was removed");
+                    echo json_encode(['message' => 'Laundry Type was removed successfully!']);
+                } else {
+                    generate_logs($db, 'Removing Queue', 'Error occurred while removing Laundry Type');
+                    http_response_code(500);
+                    echo json_encode(['message' => 'Something went wrong!']);
+                }
+            } catch (PDOException $e) {
+                // Handle PDO exceptions
+                generate_logs($db, 'Removing Queue', 'Database error: ' . $e->getMessage());
+                http_response_code(500);
+                echo json_encode(['message' => 'Database error: ' . $e->getMessage()]);
+            }
         } else {
-            generate_logs($db, 'Removing Queue', 'Error occurred while cancelling queue');
-            http_response_code(500);
-            echo json_encode(['message' => 'Something went wrong!']);
-        }
-    } else {
-        // Handle case where 'data_id' is missing or JSON decoding failed
-        http_response_code(400);
-        echo json_encode(['message' => 'Invalid data format']);
-    }
-}
-function delete($db, $data)
-{
-    $input_data = json_decode(file_get_contents("php://input"), true);
-
-    // Check if JSON decoding was successful and if 'data_id' exists
-    if ($input_data && isset($input_data['data_id'])) {
-        $id = $input_data['data_id'];
-
-        try {
-            // Correct SQL statement
-            $sql = "DELETE FROM type_laundry WHERE id = :id";
+            $sql = "UPDATE books SET status = 5  WHERE id = :id";
             $statement = $db->prepare($sql);
-            $statement->bindParam(':id', $id, PDO::PARAM_INT);
+            $statement->bindParam(':id', $id);
 
             if ($statement->execute()) {
-                // Ensure generate_logs function exists
-                generate_logs($db, 'Laundry Type', "$id | Type was removed");
-                echo json_encode(['message' => 'Laundry Type was removed successfully!']);
+                generate_logs($db, 'Cancelling Queue', "$id | Queue was Cancelled");
+                echo json_encode(['message' => ' Queue was Cancelled successfully!']);
             } else {
-                generate_logs($db, 'Removing Queue', 'Error occurred while removing Laundry Type');
+                generate_logs($db, 'Removing Queue', 'Error occurred while cancelling queue');
                 http_response_code(500);
                 echo json_encode(['message' => 'Something went wrong!']);
             }
-        } catch (PDOException $e) {
-            // Handle PDO exceptions
-            generate_logs($db, 'Removing Queue', 'Database error: ' . $e->getMessage());
-            http_response_code(500);
-            echo json_encode(['message' => 'Database error: ' . $e->getMessage()]);
         }
+
     } else {
         // Handle case where 'data_id' is missing or JSON decoding failed
         http_response_code(400);
         echo json_encode(['message' => 'Invalid data format']);
     }
 }
-
 
 ?>

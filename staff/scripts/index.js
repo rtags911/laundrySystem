@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const tableData = data.map((row) => {
         return [
           `#${row.queueNumber}`,
-          `<img class="rounded-circle me-2" width="30" height="30" src="assets/img/profile.png">${row.name}`,
+          `<img class="rounded-circle me-2" width="30" height="30" src="http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}">${row.name}`,
           row.kilo,
           row.status_text,
           row.created_at,

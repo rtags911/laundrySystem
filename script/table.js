@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!$table.data("bootstrap.table")) {
     // Make an AJAX request to fetch the data
     $.ajax({
-      url: "http://ashantilaundrysystem.muccs.host/api/post/post1.php", // Correct path to your PHP script
+      url: "https://ashantilaundrysystem.muccs.host/api/post/post1.php", // Correct path to your PHP script
       type: "POST",
       processData: false,
       contentType: false,
@@ -139,7 +139,7 @@ function getCookie(name) {
 }
 
 function removeLog(logId) {
-  fetch(`http://ashantilaundrysystem.muccs.host/api/file/`, {
+  fetch(`https://ashantilaundrysystem.muccs.host/api/file/`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

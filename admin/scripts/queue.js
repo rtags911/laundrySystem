@@ -79,28 +79,37 @@ document.addEventListener("DOMContentLoaded", () => {
       var selectedStatus = $("#select").val();
 
       // Refresh the table with the filtered data
-      $table.bootstrapTable("filterBy", {
-        status_text: selectedStatus,
-      });
+
+      if (selectedStatus === "All") {
+        // Remove any active filters
+        $table.bootstrapTable("filterBy", {});
+      } else {
+        // Filter by selected status_text
+        $table.bootstrapTable("filterBy", {
+          status_text: selectedStatus,
+        });
+      }
     });
 
     function operationFormatter(value, row, index) {
+      // Initialize variables first
       const isPending = row.status === 0;
       const isClaimed = row.status === 4;
       const isCancelled = row.status === 5;
-      const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
-      // Determine if cancel button should be disabled
+
+      // Now you can use these variables
       const cancelDisabled = !isPending || isClaimed || isCancelled;
+      const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
       const toggleModal = isPending ? "modal" : "";
 
       return `<a class="mx-1 text-decoration-none ${textColorClass} ${
         cancelDisabled ? "disabled" : ""
       }" href="#"
-                        data-id="${row.id}"
-                        data-bs-toggle="${toggleModal}"
-                        data-bs-target="#remove">
-                        <i class="far fa-trash-alt" style="font-size: 20px;"></i> Cancel
-                    </a>`;
+                data-id="${row.id}"
+                data-bs-toggle="${toggleModal}"
+                data-bs-target="#remove">
+                <i class="far fa-trash-alt" style="font-size: 20px;"></i> Cancel
+            </a>`;
     }
 
     function drop(value, row, index) {

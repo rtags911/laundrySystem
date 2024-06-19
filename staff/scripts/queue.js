@@ -1,186 +1,223 @@
 document.addEventListener("DOMContentLoaded", () => {
-  fetch(`http://ashantilaundrysystem.muccs.host/admin/api/laundry_queue.php`)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.error) {
-        console.error(data.error);
-        return;
-      }
+  const $table = $("#table");
 
-      // Add queue number to each row
-      data.forEach((row, index) => {
-        row.queueNumber = index + 1;
-      });
+  if (!$table.data("bootstrap.table")) {
+    $.ajax({
+      url: "http://ashantilaundrysystem.muccs.host/admin/api/laundry_queue.php",
+      type: "GET",
+      processData: false,
+      contentType: false,
+      success: function (data) {
+        console.log("AJAX success data:", data);
 
-      const tableData = data.map((row) => {
-        const isPending = row.status === 0;
-        const isClaimed = row.status === 4;
-
-        // Determine if cancel button should be disabled
-        const cancelDisabled = !isPending || isClaimed;
-        const toggleModal = isPending ? "modal" : "";
-
-        // Determine photo URL with fallback
-        const photoUrl = row.photo
-          ? `http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}`
-          : `http://ashantilaundrysystem.muccs.host/assets/profile.png`;
-
-        // Determine text color class
-        const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
-
-        return [
-          `#${row.queueNumber}`,
-          `<img class="rounded-circle me-2" width="30" height="30" src="${photoUrl}">${row.name}`,
-          row.type,
-          row.kilo,
-          `<select class="status-dropdown form-select" data-id="${row.id}" ${
-            isClaimed ? "disabled" : ""
-          }>
-                        <option value="0" ${
-                          row.status === 0 ? "selected" : ""
-                        }>Pending</option>
-                        <option value="1" ${
-                          row.status === 1 ? "selected" : ""
-                        }>Processing</option>
-                        <option value="2" ${
-                          row.status === 2 ? "selected" : ""
-                        }>Folding</option>
-                        <option value="3" ${
-                          row.status === 3 ? "selected" : ""
-                        }>Ready for Pickup</option>
-                        <option value="4" ${
-                          row.status === 4 ? "selected" : ""
-                        }>Claimed</option>
-                        <option value="5" ${
-                          row.status === 5 ? "selected" : ""
-                        }>Cancelled</option>
-                    </select>`,
-          `₱${row.total}`, // Adding PHP sign here
-          row.created_at,
-          row.date_booked,
-          `<a class="mx-1 text-decoration-none ${textColorClass} ${
-            cancelDisabled ? "disabled" : ""
-          }" href="#" 
-                        data-id="${row.id}" 
-                        data-bs-toggle="${toggleModal}" 
-                        data-bs-target="#remove">
-                        <i class="far fa-trash-alt" style="font-size: 20px;"></i> Cancel
-                    </a>`,
-        ];
-      });
-
-      const table = $("#dataTable");
-
-      if ($.fn.dataTable.isDataTable(table)) {
-        table.DataTable().clear().destroy();
-      }
-
-      table.DataTable({
-        data: tableData,
-        columns: [
-          { title: "Queue" },
-          { title: "Customer" },
-          { title: "Type" },
-          { title: "Kilo kg/p" },
-          { title: "Status" },
-          { title: "Total" },
-          { title: "Date Created" },
-          { title: "Date Booked" },
-          { title: "Option" },
-        ],
-        paging: true,
-        searching: true,
-        info: true,
-      });
-
-      $("#dataTable tbody").on(
-        "click",
-        'a[data-bs-target="#remove"]',
-        function (event) {
-          const logId = $(this).data("id");
-          const status = data.find((row) => row.id === logId)?.status;
-
-          // Disable the modal opening for non-Pending statuses
-          if (![0].includes(status)) {
-            // Modify [0] to include all statuses that should allow canceling
-            event.preventDefault();
-            $("#remove").modal("hide"); // Manually hide the modal
-            alert("Cannot cancel for statuses other than 'Pending'.");
-          } else {
-            $("#deleteForm input[name='data_id']").val(logId);
-          }
-        }
-      );
-
-      $("#deleteForm").on("submit", function (event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        // Get the log ID from the hidden input field
-        const logId = $("#deleteForm input[name='data_id']").val();
-
-        removeLog(logId);
-
-        // Close the modal (if needed)
-        $("#remove").modal("hide");
-      });
-
-      // Add event listener for status dropdown change
-      table.on("change", ".status-dropdown", function () {
-        const id = $(this).data("id");
-        const newStatus = parseInt($(this).val()); // Convert to integer
-        const selectedOption = $(this).find("option:selected").text();
-
-        // Determine current status
-        const currentStatus = data.find((row) => row.id === id)?.status;
-
-        // Define allowed status transitions
-        const allowedTransitions = {
-          0: [1], // Pending can transition to Processing
-          1: [2], // Processing can transition to Folding
-          2: [3], // Folding can transition to Ready for Pickup
-          3: [], // Ready for Pickup cannot transition to any other status
-          4: [], // Claimed cannot transition to any other status
-        };
-
-        // Check if the selected newStatus is allowed for the current status
-        if (!allowedTransitions[currentStatus].includes(newStatus)) {
-          // Revert back to the current status in dropdown
-          $(this).val(currentStatus);
-          alert(
-            `Cannot transition from "${getStatusText(
-              currentStatus
-            )}" to "${getStatusText(newStatus)}".`
-          );
+        if (!Array.isArray(data)) {
+          console.error("Data is not an array:", data);
           return;
         }
 
-        fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: id,
-            status: newStatus,
-            action: "statusUp",
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              alert("Status updated successfully to " + selectedOption + "!");
-              location.reload();
-            } else {
-              alert("Failed to update status: " + data.message);
-            }
-          })
-          .catch((error) => console.error("Error updating status:", error));
-      });
-    })
-    .catch((error) => {
-      console.error("Error:", error);
+        data.forEach((row, index) => {
+          row.queueNumber = index + 1;
+        });
+
+        $table.bootstrapTable("destroy");
+
+        $table.bootstrapTable({
+          data: data,
+          columns: [
+            {
+              field: "queueNumber",
+              title: "Queue",
+            },
+            {
+              field: "name",
+              title: "Customer",
+              formatter: photo,
+            },
+            {
+              field: "type",
+              title: "Type",
+            },
+            {
+              field: "kilo",
+              title: "Kilo kg/p",
+            },
+            {
+              field: "stats_text",
+              title: "Status",
+              formatter: drop,
+            },
+            {
+              field: "total",
+              title: "Total",
+              formatter: (value) => `₱${value}`,
+            },
+            {
+              field: "created_at",
+              title: "Date Created",
+            },
+            {
+              field: "date_booked",
+              title: "Date Booked",
+            },
+            {
+              field: "operate",
+              title: "Option",
+              formatter: operationFormatter,
+              cellStyle: {
+                textAlign: "center",
+              },
+            },
+          ],
+        });
+      },
+      error: function (xhr, status, error) {
+        console.error("AJAX error:", error);
+      },
     });
+
+    $("#filterBy").click(function () {
+      var selectedStatus = $("#select").val();
+
+      // Refresh the table with the filtered data
+
+      if (selectedStatus === "All") {
+        // Remove any active filters
+        $table.bootstrapTable("filterBy", {});
+      } else {
+        // Filter by selected status_text
+        $table.bootstrapTable("filterBy", {
+          status_text: selectedStatus,
+        });
+      }
+    });
+
+    function operationFormatter(value, row, index) {
+      // Initialize variables first
+      const isPending = row.status === 0;
+      const isClaimed = row.status === 4;
+      const isCancelled = row.status === 5;
+
+      // Now you can use these variables
+      const cancelDisabled = !isPending || isClaimed || isCancelled;
+      const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
+      const toggleModal = isPending ? "modal" : "";
+
+      return `<a class="mx-1 text-decoration-none ${textColorClass} ${
+        cancelDisabled ? "disabled" : ""
+      }" href="#"
+                data-id="${row.id}"
+                data-bs-toggle="${toggleModal}"
+                data-bs-target="#remove">
+                <i class="far fa-trash-alt" style="font-size: 20px;"></i> Cancel
+            </a>`;
+    }
+
+    function drop(value, row, index) {
+      const isClaimed = row.status === 4;
+      return `<select class="status-dropdown form-select" data-id="${row.id}" ${
+        isClaimed ? "disabled" : ""
+      }>
+                  <option value="0" ${
+                    row.status === 0 ? "selected" : ""
+                  }>Pending</option>
+                  <option value="1" ${
+                    row.status === 1 ? "selected" : ""
+                  }>Processing</option>
+                  <option value="2" ${
+                    row.status === 2 ? "selected" : ""
+                  }>Folding</option>
+                  <option value="3" ${
+                    row.status === 3 ? "selected" : ""
+                  }>Ready for Pickup</option>
+                  <option value="4" ${
+                    row.status === 4 ? "selected" : ""
+                  }>Claimed</option>
+                  <option value="5" ${
+                    row.status === 5 ? "selected" : ""
+                  }>Cancelled</option>
+                </select>`;
+    }
+
+    function photo(value, row, index) {
+      const photoUrl = row.photo
+        ? `http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}`
+        : `http://ashantilaundrysystem.muccs.host/assets/img/profile.png`;
+
+      return `<img class="rounded-circle me-2" width="30" height="30" src="${photoUrl}">${row.name}`;
+    }
+
+    $table.on("click", 'a[data-bs-target="#remove"]', function (event) {
+      const logId = $(this).data("id");
+      const status = data.find((row) => row.id === logId)?.status;
+
+      if (![0].includes(status)) {
+        event.preventDefault();
+        $("#remove").modal("hide");
+        alert("Cannot cancel for statuses other than 'Pending'.");
+      } else {
+        $("#deleteForm input[name='data_id']").val(logId);
+      }
+    });
+
+    $("#deleteForm").on("submit", function (event) {
+      event.preventDefault();
+      const logId = $("#deleteForm input[name='data_id']").val();
+      removeLog(logId);
+      $("#remove").modal("hide");
+    });
+
+    $table.on("change", ".status-dropdown", function () {
+      const id = $(this).data("id");
+      const newStatus = parseInt($(this).val()); // Convert to integer
+      const selectedOption = $(this).find("option:selected").text();
+
+      // Determine current status
+      const currentStatus = data.find((row) => row.id === id)?.status;
+
+      // Define allowed status transitions
+      const allowedTransitions = {
+        0: [1], // Pending can transition to Processing
+        1: [2], // Processing can transition to Folding
+        2: [3], // Folding can transition to Ready for Pickup
+        3: [], // Ready for Pickup cannot transition to any other status
+        4: [], // Claimed cannot transition to any other status
+      };
+
+      // Check if the selected newStatus is allowed for the current status
+      if (!allowedTransitions[currentStatus].includes(newStatus)) {
+        // Revert back to the current status in dropdown
+        $(this).val(currentStatus);
+        alert(
+          `Cannot transition from "${getStatusText(
+            currentStatus
+          )}" to "${getStatusText(newStatus)}".`
+        );
+        return;
+      }
+
+      fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+          status: newStatus,
+          action: "statusUp",
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Type updated successfully to " + selectedOption + "!");
+            location.reload();
+          } else {
+            alert("Failed to update status: " + data.message);
+          }
+        })
+        .catch((error) => console.error("Error updating status:", error));
+    });
+  }
 });
 
 function removeLog(logId) {
@@ -205,7 +242,7 @@ function removeLog(logId) {
 
         Swal.fire({
           title: "Success",
-          text: "You have successfully Cancelled the Queue",
+          text: "You have successfully Deleted the Queue",
           icon: "success",
           confirmButtonText: "Ok",
         }).then((result) => {

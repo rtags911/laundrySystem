@@ -12,7 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const tableData = data.map((row) => {
         return [
           row.id,
-          `<img class="rounded-circle me-2" width="30" height="30" src="assets/img/profile.png">${row.username}`,
+          `<img class="rounded-circle me-2" width="30" height="30" src="${getImageSrc(
+            row.role,
+            row.photo
+          )}">${row.username}`,
           row.role,
           row.created_at,
           `<a class="mx-1 text-decoration-none text-warning" href="#" data-bs-target="#update" data-bs-toggle="modal" data-id="${row.id}" data-username="${row.username}" data-type="${row.level}">
@@ -216,4 +219,14 @@ function removeLog(logId) {
       }
     })
     .catch((error) => window.location.reload());
+}
+
+function getImageSrc(role, photo) {
+  if (role === "staff") {
+    return `http://ashantilaundrysystem.muccs.host/img/staff/${photo}`;
+  } else if (role === "admin") {
+    return `http://ashantilaundrysystem.muccs.host/img/admin/${photo}`;
+  } else {
+    return "http://ashantilaundrysystem.muccs.host/assets/img/profile.png"; // Default image path if role is neither 'staff' nor 'admin'
+  }
 }

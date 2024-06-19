@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", function () {
       confirmButtonText: "Ok",
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "http://ashantilaundrysystem.muccs.host/index.html";
+        window.location.href =
+          "https://ashantilaundrysystem.muccs.host/index.html";
       }
     });
   }
@@ -55,7 +56,7 @@ function logoutAndClearCookies() {
   document.cookie = "level=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
   // Send POST request to logout.php
-  fetch("http://ashantilaundrysystem.muccs.host/admin/api/logout.php", {
+  fetch("https://ashantilaundrysystem.muccs.host/admin/api/logout.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -72,7 +73,8 @@ function logoutAndClearCookies() {
           confirmButtonText: "Ok",
         }).then((result) => {
           if (result.isConfirmed) {
-            window.location.href = "http://ashantilaundrysystem.muccs.host/index.html";
+            window.location.href =
+              "https://ashantilaundrysystem.muccs.host/index.html";
           }
         });
       } else {

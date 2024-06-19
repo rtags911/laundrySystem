@@ -1,10 +1,17 @@
 <?php
 session_start();
 
+// $host = 'localhost';
+// $dbname = 'u663034616_laundry';
+// $username = 'u663034616_laundry';
+// $password = 'D1h41pesgx911!';
+
 $host = 'localhost';
-$dbname = 'u663034616_laundry';
-$username = 'u663034616_laundry';
-$password = 'D1h41pesgx911!';
+$dbname = 'lms_db';
+$username = 'root';
+$password = '';
+
+
 
 try {
     $db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);

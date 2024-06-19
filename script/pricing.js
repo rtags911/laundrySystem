@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Fetch user details if ID is available
   if (userID) {
-    fetch(`http://ashantilaundrysystem.muccs.host/api/file/?userID=${userID}`, {
+    fetch(`https://ashantilaundrysystem.muccs.host/api/file/?userID=${userID}`, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $(document).ready(function () {
     // AJAX request to fetch data from PHP script
     $.ajax({
-      url: "http://ashantilaundrysystem.muccs.host/admin/api/type.php",
+      url: "https://ashantilaundrysystem.muccs.host/admin/api/type.php",
       type: "GET", // Use GET method to fetch data
       dataType: "json", // Expect JSON data in response
       success: function (data) {
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const serializedFormData = JSON.stringify(formObject);
       console.log(serializedFormData);
 
-      fetch("http://ashantilaundrysystem.muccs.host/api/file/", {
+      fetch("https://ashantilaundrysystem.muccs.host/api/file/", {
         method: "POST",
         body: formData,
       })

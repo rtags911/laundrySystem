@@ -1,6 +1,6 @@
 <?php
 // Include the database connection file
-include_once '../api/function/conn.php';
+include_once 'function/conn.php';
 
 try {
     // SQL query to fetch data from type_laundry table

@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Make a POST request to fetch user details
         $.ajax({
-          url: "http://ashantilaundrysystem.muccs.host/api/file/",
+          url: "https://ashantilaundrysystem.muccs.host/api/file/",
           type: "POST",
           data: formData,
           success: function (data) {
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
               );
               if (avatarDropdownImg) {
                 const avatarUrl = userData.photo
-                  ? "http://ashantilaundrysystem.muccs.host/img/customer/" +
+                  ? "https://ashantilaundrysystem.muccs.host/img/customer/" +
                     userData.photo
                   : "/img/placeholder1.jpg"; // Default placeholder image
                 avatarDropdownImg.src = avatarUrl;
