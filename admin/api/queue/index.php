@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $data['action'];
 
         if ($action == "laundry") {
-            delete($db, $data);
+            delete($db);
         }
     } else {
         removeQueue($db);
