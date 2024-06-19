@@ -31,7 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action == "typeStatus") {
             TypeStatus($db, $data);
         }
+    }
+    if (isset($data['action'])) {
+        $action = $data['action'];
+
+        if ($action == "add") {
+            addStatus($db, $data);
+        }
     } else {
+
 
         echo json_encode(array("success" => false, "message" => "Action not set"));
     }
@@ -97,6 +105,33 @@ function TypeStatus($db, $data)
             echo json_encode(array("success" => true, "message" => "Status updated successfully"));
         } else {
             echo json_encode(array("success" => false, "message" => "Failed to update Status"));
+        }
+    } else {
+        echo json_encode(array("success" => false, "message" => "Invalid input"));
+    }
+}
+function addStatus($db, $data)
+{
+    if (isset($data['laundry']) && !empty($data['laundry'])) {
+        $name = $data['laundry'];
+
+        try {
+            // Prepare the SQL statement with placeholders
+            $sql = "INSERT INTO `type_laundry` (type_name, `status_type`) VALUES (:name, 1)";
+            $stmt = $db->prepare($sql);
+
+            // Execute the statement with bound parameters
+            $result = $stmt->execute([':name' => $name]);
+
+            // Check if the insert was successful
+            if ($result) {
+                echo json_encode(array("success" => true, "message" => "Status updated successfully"));
+            } else {
+                echo json_encode(array("success" => false, "message" => "Failed to update Status"));
+            }
+        } catch (PDOException $e) {
+            // Handle PDO exceptions
+            echo json_encode(array("success" => false, "message" => "Database error: " . $e->getMessage()));
         }
     } else {
         echo json_encode(array("success" => false, "message" => "Invalid input"));

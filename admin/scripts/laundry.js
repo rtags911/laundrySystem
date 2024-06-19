@@ -18,12 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
           row.type_name,
           `<select class="status-dropdown form-select" data-id="${row.id}" 
           }>
-                        <option value="${row.id}" ${
-            row.status_type === 0 ? "selected" : ""
-          }>Available</option>
-                        <option value="${row.id}" ${
-            row.status_type === 1 ? "selected" : ""
-          }>Not Available</option>
+                        <option value="0" ${
+                          row.status_type === 0 ? "selected" : ""
+                        }>Available</option>
+                        <option value="1" ${
+                          row.status_type === 1 ? "selected" : ""
+                        }>Not Available</option>
                     </select>`,
           `<a class="mx-1 text-decoration-none text-danger " href="#" 
                         data-id="${row.id}" 
@@ -107,6 +107,43 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch((error) => {
       console.error("Error:", error);
     });
+
+  document
+    .getElementById("addCustomer")
+    .addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent form submission
+
+      const formData = new FormData(this);
+
+      fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Reload the DataTable on successful addition
+
+            Swal.fire({
+              title: "Success",
+              text: data.message,
+              icon: "success",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: data.message,
+              icon: "error",
+              confirmButtonText: "Ok",
+            });
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    });
 });
 
 function removeLog(logId) {
@@ -115,7 +152,7 @@ function removeLog(logId) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ data_id: logId }),
+    body: JSON.stringify({ data_id: logId, action: "laundry" }),
   })
     .then((response) => {
       if (!response.ok) {
