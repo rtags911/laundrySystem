@@ -17,10 +17,6 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap"
     />
-      <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.css"
-    />
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css" />
     <link rel="stylesheet" href="assets/css/bs-theme-overrides.css" />
     <link rel="stylesheet" href="assets/css/dataTables.bootstrap5.min.css" />
@@ -151,7 +147,7 @@
                 <p class="text-primary m-0 fw-bold">Laundry Type</p>
               </div>
               <div class="card-body">
-                <!-- <div
+                <div
                   class="table-responsive table mt-2"
                   role="grid"
                   aria-describedby="dataTable_info"
@@ -165,55 +161,7 @@
                       <tr></tr>
                     </tfoot>
                   </table>
-                </div> -->
-
-
-                <div class="col-md-10">
-            <div class="toolbar">
-              <select
-                id="select"
-                class="form-control custom-select"
-                name="filterAlgorithm"
-              >
-                <option value="Pending">Pending</option>
-                <option value="Processing">Processing</option>
-                <option value="Folding">Folding</option>
-                <option value="Claimed">Claimed</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Ready for Pickup">Ready for Pickup</option>
-              </select>
-              <button class="btn btn-secondary mt-2" id="filterBy">
-                filterBy
-              </button>
-            </div>
-
-            <div
-              class="table-responsive table mt-2"
-              role="grid"
-              aria-describedby="dataTable_info"
-            >
-              <table
-                id="table"
-                data-toolbar="#toolbar"
-                data-toggle="table"
-                data-search="true"
-                data-pagination="true"
-                data-page-size="10"
-              >
-                <thead>
-                  <tr>
-                    <th data-field="name_position">Position Title</th>
-                    <th data-field="photo">photo</th>
-                    <th data-field="firstname">First Name</th>
-                    <th data-field="lastname">Lastname</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-          </div>
-
-
-          
+                </div>
               </div>
             </div>
           </div>
@@ -305,6 +253,5 @@
     <script src="assets/js/sweetAlert2@10.js"></script>
     <script src="scripts/laundry.js"></script>
     <script src="scripts/cookiesChecker.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.6/dist/bootstrap-table.min.js"></script>
   </body>
 </html>
