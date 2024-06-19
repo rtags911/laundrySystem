@@ -260,4 +260,3 @@ function getImageSrc(photo) {
     return "http://ashantilaundrysystem.muccs.host/assets/img/profile.png"; // Default image path
   }
 }
-

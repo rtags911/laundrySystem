@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function photo(value, row, index) {
       const photoUrl = row.photo
-        ? `http://ashantilaundrysystem.muccs.host/img/customer/${row.photo}`
+        ? `http://ashantilaundrysystem.muccs.host/img/customer/${row.customer_photo}`
         : `http://ashantilaundrysystem.muccs.host/assets/img/profile.png`;
 
       return `<img class="rounded-circle me-2" width="30" height="30" src="${photoUrl}">${row.name}`;
