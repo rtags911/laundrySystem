@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  fetch(`http://ashantilaundrysystem.muccs.host/admin/api/laundry_queue.php`)
+  fetch(`http://ashantilaundrysystem.muccs.host/admin/api/type.php`)
     .then((response) => response.json())
     .then((data) => {
       if (data.error) {
@@ -13,16 +13,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const tableData = data.map((row) => {
-
-        const textColorClass = cancelDisabled ? "text-muted" : "text-danger";
-
         return [
-         
-          `<a class="mx-1 text-decoration-none ${textColorClass} ${
-            cancelDisabled ? "disabled" : ""
-          }" href="#" 
+          row.id,
+          row.type_name,
+          `<select class="status-dropdown form-select" data-id="${row.id}" 
+          }>
+                        <option value="${row.id}" ${
+            row.status_type === 0 ? "selected" : ""
+          }>Available</option>
+                        <option value="${row.id}" ${
+            row.status_type === 1 ? "selected" : ""
+          }>Not Available</option>
+                    </select>`,
+          `<a class="mx-1 text-decoration-none text-danger " href="#" 
                         data-id="${row.id}" 
-                        data-bs-toggle="${toggleModal}" 
+                        data-bs-toggle="modal" 
                         data-bs-target="#remove">
                         <i class="far fa-trash-alt" style="font-size: 20px;"></i> Cancel
                     </a>`,
@@ -38,14 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
       table.DataTable({
         data: tableData,
         columns: [
-          { title: "Queue" },
-          { title: "Customer" },
-          { title: "Type" },
-          { title: "Kilo kg/p" },
+          { title: "id" },
+          { title: "Name" },
           { title: "Status" },
-          { title: "Total" },
-          { title: "Date Created" },
-          { title: "Date Booked" },
           { title: "Option" },
         ],
         paging: true,
@@ -58,17 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         'a[data-bs-target="#remove"]',
         function (event) {
           const logId = $(this).data("id");
-          const status = data.find((row) => row.id === logId)?.status;
-
-          // Disable the modal opening for non-Pending statuses
-          if (![0].includes(status)) {
-            // Modify [0] to include all statuses that should allow canceling
-            event.preventDefault();
-            $("#remove").modal("hide"); // Manually hide the modal
-            alert("Cannot cancel for statuses other than 'Pending'.");
-          } else {
-            $("#deleteForm input[name='data_id']").val(logId);
-          }
+          $("#deleteForm input[name='data_id']").val(logId);
         }
       );
 
@@ -85,64 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
         $("#remove").modal("hide");
       });
 
-      table.on("change", ".type-dropdown", function () {
-        const id = $(this).data("id");
-        const newType = $(this).val(); // Convert to integer
-        const selectedOption = $(this).find("option:selected").text();
-
-        fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: id,
-            type: newType,
-            action: "type",
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              alert("Status updated successfully to " + selectedOption + "!");
-              location.reload();
-            } else {
-              alert("Failed to update status: " + data.message);
-            }
-          })
-          .catch((error) => console.error("Error updating status:", error));
-      });
-
       // Add event listener for status dropdown change
       table.on("change", ".status-dropdown", function () {
         const id = $(this).data("id");
         const newStatus = parseInt($(this).val()); // Convert to integer
         const selectedOption = $(this).find("option:selected").text();
 
-        // Determine current status
-        const currentStatus = data.find((row) => row.id === id)?.status;
-
-        // Define allowed status transitions
-        const allowedTransitions = {
-          0: [1], // Pending can transition to Processing
-          1: [2], // Processing can transition to Folding
-          2: [3], // Folding can transition to Ready for Pickup
-          3: [], // Ready for Pickup cannot transition to any other status
-          4: [], // Claimed cannot transition to any other status
-        };
-
-        // Check if the selected newStatus is allowed for the current status
-        if (!allowedTransitions[currentStatus].includes(newStatus)) {
-          // Revert back to the current status in dropdown
-          $(this).val(currentStatus);
-          alert(
-            `Cannot transition from "${getStatusText(
-              currentStatus
-            )}" to "${getStatusText(newStatus)}".`
-          );
-          return;
-        }
-
         fetch(`http://ashantilaundrysystem.muccs.host/admin/api/queue/`, {
           method: "POST",
           headers: {
@@ -150,8 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
           },
           body: JSON.stringify({
             id: id,
-            status: newStatus,
-            action: "statusUp",
+            stat: newStatus,
+            action: "typeStatus",
           }),
         })
           .then((response) => response.json())
@@ -206,21 +144,4 @@ function removeLog(logId) {
       }
     })
     .catch((error) => window.location.reload());
-}
-
-function getStatusText(status) {
-  switch (status) {
-    case 0:
-      return "Pending";
-    case 1:
-      return "Processing";
-    case 2:
-      return "Folding";
-    case 3:
-      return "Ready for Pickup";
-    case 4:
-      return "Claimed";
-    default:
-      return "Unknown";
-  }
 }
